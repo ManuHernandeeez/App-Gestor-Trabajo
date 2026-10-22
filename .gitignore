@@ -1,0 +1,44 @@
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Secretos y configuración local (usar dotnet user-secrets o variables de entorno)
+.env
+*.secrets.json
+secrets.json
+appsettings.Local.json
+appsettings.Development.json
+
+# Respaldos de la base de datos
+*.dump
+*.backup
+
+# Claude Code (configuración local)
+.claude/settings.local.json
+
+# .NET (api/)
+api/**/bin/
+api/**/obj/
+api/.vs/
+*.user
+*.suo
+
+# Fotos de perfil subidas: la carpeta existe, el contenido no
+api/**/Fotos/*
+!api/**/Fotos/.gitkeep
+
+# Android Studio (android/)
+*.iml
+.gradle/
+local.properties
+android/build/
+android/app/build/
+android/captures/
+.externalNativeBuild/
+.cxx/
+android/.idea/caches/
+android/.idea/libraries/
+android/.idea/modules.xml
+android/.idea/workspace.xml
+android/.idea/navEditor.xml
+android/.idea/assetWizardSettings.xml
