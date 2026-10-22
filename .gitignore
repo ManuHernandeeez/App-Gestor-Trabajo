@@ -42,3 +42,7 @@ android/.idea/modules.xml
 android/.idea/workspace.xml
 android/.idea/navEditor.xml
 android/.idea/assetWizardSettings.xml
+
+# Documentación privada (no se sube a GitHub)
+privado/
+/CLAUDE.md
