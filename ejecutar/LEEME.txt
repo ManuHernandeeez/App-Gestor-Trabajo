@@ -84,13 +84,32 @@ C. CUENTAS DE EJEMPLO (todas con la contrasena Clave12345)
 
 En la app, el "Acceso de prueba" entra con estas cuentas sin escribir nada.
 
-Recorrido para probar:
-   1. Cliente (Maria): Nueva solicitud, oficio Electricidad, llena los datos y Publicar.
-   2. Trabajador (Luis): Trabajos de mi zona > abre la solicitud > precio y mensaje > Enviar propuesta.
-   3. Trabajador (Pedro): envia otra propuesta a la misma solicitud.
-   4. Cliente (Maria): abre la solicitud, ve las dos propuestas y toca Aceptar en una.
-   5. Trabajador (Pedro): en Mis propuestas ve la suya como Rechazada.
-Usa "Salir" para cambiar de cuenta.
+El administrador no tiene boton de acceso de prueba: se escribe su correo y su clave en el login.
+Un trabajador de otra zona (trabajador4, Fontaneria en San Salvador) sirve para comprobar que NO ve
+las solicitudes de Mejicanos.
+
+Recorrido para probar (es el de la demostracion):
+   1. Administrador: en Catalogos ve los oficios y las zonas con su interruptor (activo o inactivo),
+      y puede agregar o cambiar nombres. En Usuarios y reportes busca usuarios y ve las cifras.
+   2. Cliente (Maria): Nueva solicitud, oficio Electricidad, llena los datos y Publicar.
+   3. Trabajador (Luis): Trabajos de mi zona > abre la solicitud > precio y mensaje > Enviar propuesta.
+      No se ve telefono ni direccion del cliente.
+   4. Trabajador (Pedro): envia otra propuesta a la misma solicitud.
+   5. Cliente (Maria): abre la solicitud > Ver propuestas, ve las dos y toca Aceptar en una.
+   6. Trabajador (Pedro): en Mis propuestas ve la suya como Rechazada. Al cerrar y abrir la app
+      sale el cuadro "Novedades" con el aviso.
+   7. Maria y Luis: Ver seguimiento (Luis: Mis propuestas > la aceptada) muestra el telefono y la
+      direccion del otro. Nadie mas puede verlos.
+   8. Maria y Luis: se escriben desde la pestana Mensajes. Al cerrar y abrir la app, el otro ve en
+      "Novedades" que tiene un mensaje nuevo.
+   9. Luis: Marcar en proceso. Maria: Confirmar trabajo terminado. Los dos se Califican (de 1 a 5
+      estrellas y un comentario). El promedio de cada uno cambia en su Perfil.
+  10. Administrador: Usuarios y reportes > busca a Diana > Suspender. Diana ya no puede entrar.
+      Despues Reactivar.
+  11. Una solicitud publicada hace mas de 72 horas pasa sola a Vencida (la API lo revisa al
+      arrancar y cada hora).
+Para cambiar de cuenta: pestana Perfil > Cerrar sesion (el administrador, el icono de arriba a la derecha).
+La lista completa de comprobaciones esta en la carpeta privada del equipo (docs/pruebas-android.md).
 
 
 =====================================================================
@@ -129,3 +148,42 @@ Quiero dejar la base limpia (borra todo)
       (te pide la contrasena de postgres). Despues reinicia la API.
    Si PowerShell dice que no permite ejecutar scripts, corre una vez:
         Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+
+
+=====================================================================
+E. COPIA DE SEGURIDAD DE LA BASE (pg_dump)
+=====================================================================
+
+Hace falta la contrasena de "postgres". En PowerShell, desde la carpeta GestorTrabajo
+(cambia 18 por tu version de PostgreSQL si es otra):
+
+   $pg = 'C:\Program Files\PostgreSQL\18\bin'
+
+Respaldar (crea el archivo respaldo.dump):
+   & "$pg\pg_dump.exe" -h localhost -U postgres -d gestor_trabajo_rapido -F c -f respaldo.dump
+
+Restaurar. En una PC nueva corre antes  .\bd\aplicar.ps1  para crear la base y el rol gtr_api:
+   & "$pg\pg_restore.exe" -h localhost -U postgres -d gestor_trabajo_rapido --clean --if-exists --no-owner respaldo.dump
+
+Los archivos .dump no se suben a GitHub (estan en .gitignore): contienen datos de usuarios.
+Para comprobar que la base esta sana (313 pruebas, no deja datos):   .\bd\aplicar.ps1 -Pruebas
+
+
+=====================================================================
+F. TELEFONO POR WI-FI EN VEZ DE CABLE (opcional)
+=====================================================================
+
+Con el cable USB todo funciona sin esto (paso 3). Si prefieres el Wi-Fi:
+
+   1. PC y telefono en la misma red. Averigua la IP de la PC:
+        Get-NetIPAddress -AddressFamily IPv4 | Where-Object { $_.IPAddress -notmatch '^(127|169\.254)' }
+   2. Abre el puerto 5000 en el firewall de Windows (PowerShell COMO ADMINISTRADOR, una sola vez):
+        New-NetFirewallRule -DisplayName "Gestor de Trabajo API" -Direction Inbound -Protocol TCP -LocalPort 5000 -Action Allow
+   3. Comprueba desde el navegador del telefono:  http://IP-DE-LA-PC:5000/swagger  (debe salir Swagger).
+   4. En android\app\src\main\java\com\utec\gestortrabajo\Config.java cambia URL_BASE a
+      "http://IP-DE-LA-PC:5000/" y en android\app\src\main\res\xml\network_security_config.xml
+      agrega esa IP como otro <domain> (HTTP sin cifrar: solo para desarrollo).
+   5. Vuelve a pulsar Run en Android Studio.
+
+Para el emulador de Android Studio la PC es  http://10.0.2.2:5000/  (no necesita firewall).
+Antes de entregar la app: poner ACCESO_DE_PRUEBA = false en Config.java.
