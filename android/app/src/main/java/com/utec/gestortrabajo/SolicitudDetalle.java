@@ -19,6 +19,10 @@ public class SolicitudDetalle {
     public final String estado;
     public final String fechaPublicacion;
     public final String clienteNombre;
+    // Solo lo reciben el dueño y el trabajador asignado; null si todavía no hay trabajador
+    public final String trabajadorNombre;
+    // Cantidad de propuestas, solo para el dueño; 0 para el trabajador
+    public final int propuestas;
     public final String miPropuestaEstado;
     public final double miPropuestaPrecio;
 
@@ -32,6 +36,8 @@ public class SolicitudDetalle {
         estado = json.getString("estado");
         fechaPublicacion = json.getString("fechaPublicacion");
         clienteNombre = json.getString("clienteNombre");
+        trabajadorNombre = json.isNull("trabajadorNombre") ? null : json.getString("trabajadorNombre");
+        propuestas = json.isNull("propuestas") ? 0 : json.getInt("propuestas");
         if (json.isNull("miPropuesta")) {
             miPropuestaEstado = null;
             miPropuestaPrecio = 0;

@@ -47,7 +47,7 @@ public class MisSolicitudesActivity extends AppCompatActivity {
         listaSolicitudes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> padre, View vista, int posicion, long id) {
-                abrirPropuestas(solicitudes.get(posicion));
+                abrirDetalle(solicitudes.get(posicion));
             }
         });
 
@@ -83,13 +83,9 @@ public class MisSolicitudesActivity extends AppCompatActivity {
         startActivity(new Intent(this, NuevaSolicitudActivity.class));
     }
 
-    private void abrirPropuestas(SolicitudResumen solicitud) {
-        Intent intent = new Intent(this, PropuestasActivity.class);
+    private void abrirDetalle(SolicitudResumen solicitud) {
+        Intent intent = new Intent(this, DetalleSolicitudActivity.class);
         intent.putExtra("solicitudId", solicitud.id);
-        intent.putExtra("titulo", solicitud.titulo);
-        intent.putExtra("zona", solicitud.zona);
-        intent.putExtra("presupuesto", solicitud.presupuesto);
-        intent.putExtra("estado", solicitud.estado);
         startActivity(intent);
     }
 

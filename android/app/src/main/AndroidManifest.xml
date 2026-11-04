@@ -34,11 +34,17 @@
             android:name=".PerfilActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
+        <activity android:name=".SeguimientoActivity" />
+        <activity
+            android:name=".CalificarActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+
         <!-- Cliente -->
         <activity android:name=".MisSolicitudesActivity" />
         <activity
             android:name=".NuevaSolicitudActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity android:name=".DetalleSolicitudActivity" />
         <activity android:name=".PropuestasActivity" />
 
         <!-- Trabajador -->

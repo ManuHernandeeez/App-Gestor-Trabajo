@@ -85,8 +85,10 @@ public class MisPropuestasActivity extends AppCompatActivity {
         cargar();
     }
 
+    // Una propuesta aceptada lleva al seguimiento del trabajo; las demás, al detalle para verla o reenviarla
     private void abrirDetalle(PropuestaPropia propuesta) {
-        Intent intent = new Intent(this, DetalleTrabajoActivity.class);
+        Class<?> destino = propuesta.estado.equals("aceptada") ? SeguimientoActivity.class : DetalleTrabajoActivity.class;
+        Intent intent = new Intent(this, destino);
         intent.putExtra("solicitudId", propuesta.solicitudId);
         startActivity(intent);
     }

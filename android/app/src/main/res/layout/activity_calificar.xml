@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/raiz"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/superficie"
+    android:orientation="vertical">
+
+    <LinearLayout style="@style/BarraSuperior">
+
+        <ImageButton
+            android:id="@+id/btnVolver"
+            style="@style/BotonIcono"
+            android:contentDescription="@string/volver"
+            android:onClick="volver"
+            android:src="@drawable/ic_atras" />
+
+        <TextView
+            android:id="@+id/txtTituloBarra"
+            style="@style/TituloBarra"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_weight="1"
+            android:text="@string/titulo_calificar" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/fondo">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/espacio_pantalla">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/fondo_tarjeta"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="@dimen/espacio_tarjeta">
+
+                <TextView
+                    android:id="@+id/txtCalificar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/texto"
+                    android:textSize="@dimen/texto_titulo"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtTrabajo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/espacio_pequeno"
+                    android:gravity="center"
+                    android:textColor="@color/gris"
+                    android:textSize="@dimen/texto_normal" />
+
+                <RatingBar
+                    android:id="@+id/vistaEstrellas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/espacio_seccion"
+                    android:numStars="5"
+                    android:progressBackgroundTint="@color/borde_campo"
+                    android:progressTint="@color/alerta"
+                    android:secondaryProgressTint="@color/alerta"
+                    android:stepSize="1" />
+            </LinearLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/espacio_seccion"
+                android:hint="@string/hint_comentario"
+                app:counterEnabled="true"
+                app:counterMaxLength="500">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtComentario"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="top"
+                    android:inputType="textMultiLine|textCapSentences"
+                    android:maxLength="500"
+                    android:minLines="4" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/btnEnviar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/espacio_pequeno"
+                android:onClick="enviar"
+                android:text="@string/boton_enviar_calificacion" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

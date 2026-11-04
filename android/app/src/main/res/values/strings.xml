@@ -119,6 +119,52 @@
     <string name="propuesta_aceptada_ok">Propuesta aceptada. El trabajo quedó asignado.</string>
     <string name="propuesta_rechazada_ok">Propuesta rechazada</string>
 
+    <!-- Detalle de una solicitud (cliente) -->
+    <string name="titulo_detalle_solicitud">Mi solicitud</string>
+    <string name="trabajador_asignado">Trabajador asignado: %1$s</string>
+    <string name="boton_ver_propuestas">Ver propuestas (%1$d)</string>
+    <string name="boton_ver_seguimiento">Ver seguimiento</string>
+    <string name="boton_cancelar_solicitud">Cancelar solicitud</string>
+    <string name="cancelar_solicitud_titulo">¿Cancelar la solicitud?</string>
+    <string name="cancelar_solicitud_mensaje">Las propuestas pendientes se rechazarán. Esta acción no se puede deshacer.</string>
+    <string name="solicitud_cancelada_ok">Solicitud cancelada</string>
+
+    <!-- Seguimiento (cliente y trabajador) -->
+    <string name="titulo_seguimiento">Seguimiento</string>
+    <string name="cliente_nombre">Cliente: %1$s</string>
+    <string name="indicacion_publicada">Esta solicitud todavía no tiene un trabajador asignado.</string>
+    <string name="indicacion_asignada_cliente">Trabajo asignado. El trabajador lo marcará en proceso cuando empiece.</string>
+    <string name="indicacion_asignada_trabajador">Contacta al cliente y marca el trabajo en proceso cuando empieces.</string>
+    <string name="indicacion_proceso_cliente">El trabajo está en proceso. Confirma cuando el trabajador termine.</string>
+    <string name="indicacion_proceso_trabajador">Trabajo en proceso. El cliente confirmará cuando termines.</string>
+    <string name="indicacion_finalizada">Trabajo finalizado. Califica a %1$s.</string>
+    <string name="indicacion_cancelada">Esta solicitud fue cancelada.</string>
+    <string name="indicacion_vencida">Esta solicitud venció sin asignarse.</string>
+    <string name="contacto_cliente">Contacto del cliente</string>
+    <string name="contacto_trabajador">Contacto del trabajador</string>
+    <string name="contacto_telefono">Teléfono: %1$s</string>
+    <string name="contacto_direccion">Dirección del trabajo: %1$s</string>
+    <string name="sin_dato">No registrado</string>
+    <string name="boton_marcar_en_proceso">Marcar en proceso</string>
+    <string name="boton_confirmar_terminado">Confirmar trabajo terminado</string>
+    <string name="boton_confirmar">Confirmar</string>
+    <string name="boton_calificar">Calificar a %1$s</string>
+    <string name="en_proceso_ok">Trabajo marcado en proceso</string>
+    <string name="terminado_titulo">¿Confirmar que terminó?</string>
+    <string name="terminado_mensaje">Confirma solo si el trabajo ya quedó hecho. Después podrás calificar al trabajador.</string>
+    <string name="terminado_ok">Trabajo finalizado</string>
+
+    <!-- Calificar (cliente y trabajador) -->
+    <string name="titulo_calificar">Calificar</string>
+    <string name="calificar_a">Califica a %1$s</string>
+    <string name="hint_comentario">Comentario</string>
+    <string name="boton_enviar_calificacion">Enviar calificación</string>
+    <string name="falta_estrellas">Elige de 1 a 5 estrellas</string>
+    <string name="falta_comentario">Escribe un comentario</string>
+    <string name="calificacion_enviada">Calificación enviada</string>
+    <string name="descartar_calificacion_titulo">¿Descartar la calificación?</string>
+    <string name="descartar_calificacion_mensaje">Todavía no la has enviado. Si sales, se perderá lo que escribiste.</string>
+
     <!-- Mis propuestas (trabajador) -->
     <string name="titulo_mis_propuestas">Mis propuestas</string>
     <string name="vacio_mis_propuestas">No tienes propuestas con este filtro</string>
