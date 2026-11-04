@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Hoja que sube desde abajo para elegir un elemento de una lista, con buscador. La arma HojaSeleccion. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="36dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/fondo_manija" />
+
+    <TextView
+        android:id="@+id/txtTitulo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="20dp"
+        android:paddingTop="16dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="12dp"
+        android:textColor="@color/texto"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/capaBuscar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/espacio_pantalla"
+        android:layout_marginEnd="@dimen/espacio_pantalla"
+        android:layout_marginBottom="@dimen/espacio_pequeno"
+        android:hint="@string/buscar"
+        app:startIconDrawable="@drawable/ic_buscar">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtBuscar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionSearch"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:maxLines="1" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ListView
+            android:id="@+id/listaElementos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@color/borde"
+            android:dividerHeight="1dp"
+            android:nestedScrollingEnabled="true"
+            android:paddingStart="@dimen/espacio_pequeno"
+            android:paddingEnd="@dimen/espacio_pequeno" />
+
+        <TextView
+            android:id="@+id/txtVacio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:padding="@dimen/espacio_seccion"
+            android:text="@string/sin_resultados"
+            android:textColor="@color/gris"
+            android:textSize="@dimen/texto_subtitulo"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <Button
+        android:id="@+id/btnAceptar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/espacio_pantalla"
+        android:text="@string/boton_aceptar"
+        android:visibility="gone" />
+</LinearLayout>

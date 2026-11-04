@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tarjeta de solicitud del cliente: título y estado, oficio y zona, y abajo presupuesto y propuestas -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/fondo_tarjeta"
+    android:orientation="vertical"
+    android:padding="@dimen/espacio_tarjeta">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtTitulo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/espacio_pequeno"
+            android:layout_weight="1"
+            android:textColor="@color/texto"
+            android:textSize="@dimen/texto_subtitulo"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txtEstado"
+            style="@style/EtiquetaEstado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtOficio"
+        style="@style/FilaIcono"
+        android:layout_marginTop="@dimen/espacio_medio"
+        android:drawableStart="@drawable/ic_fila_oficio" />
+
+    <TextView
+        android:id="@+id/txtZona"
+        style="@style/FilaIcono"
+        android:drawableStart="@drawable/ic_fila_ubicacion" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/espacio_medio"
+        android:background="@color/borde" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/espacio_medio"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtPresupuesto"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/texto"
+            android:textSize="@dimen/texto_titulo"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txtPropuestas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/principal"
+            android:textSize="@dimen/texto_normal"
+            android:textStyle="bold" />
+    </LinearLayout>
+</LinearLayout>

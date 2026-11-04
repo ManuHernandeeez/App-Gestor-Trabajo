@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fila de la hoja cuando se pueden elegir varias: con casilla a la derecha -->
+<CheckedTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+    android:gravity="center_vertical"
+    android:minHeight="52dp"
+    android:paddingStart="@dimen/espacio_pantalla"
+    android:paddingEnd="@dimen/espacio_pantalla"
+    android:textColor="@color/texto"
+    android:textSize="@dimen/texto_subtitulo" />

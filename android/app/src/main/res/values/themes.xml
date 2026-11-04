@@ -1,9 +1,190 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.GestorTrabajo" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    <!-- Tema claro con un solo color de marca. Se definen todos los roles de color de Material 3 para que
+         ninguna pieza (diálogos, chips, barra inferior) caiga en el violeta de fábrica. -->
+    <style name="Base.Theme.GestorTrabajo" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/principal</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/principal_suave</item>
+        <item name="colorOnPrimaryContainer">@color/principal_oscuro</item>
+        <item name="colorSecondary">@color/principal</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorSecondaryContainer">@color/principal_suave</item>
+        <item name="colorOnSecondaryContainer">@color/principal_oscuro</item>
+        <item name="colorSurface">@color/superficie</item>
+        <item name="colorOnSurface">@color/texto</item>
+        <item name="colorSurfaceVariant">@color/borde</item>
+        <item name="colorOnSurfaceVariant">@color/gris</item>
+        <item name="colorOutline">@color/borde_fuerte</item>
+        <item name="colorOutlineVariant">@color/borde</item>
+        <item name="colorError">@color/error</item>
+        <item name="elevationOverlayEnabled">false</item>
+        <item name="colorSurfaceBright">@color/superficie</item>
+        <item name="colorSurfaceDim">@color/borde</item>
+        <item name="colorSurfaceContainerLowest">@color/superficie</item>
+        <item name="colorSurfaceContainerLow">@color/superficie</item>
+        <item name="colorSurfaceContainer">@color/superficie</item>
+        <item name="colorSurfaceContainerHigh">@color/superficie</item>
+        <item name="colorSurfaceContainerHighest">@color/borde</item>
+        <item name="android:windowBackground">@color/fondo</item>
+        <item name="android:textColorPrimary">@color/texto</item>
+
+        <item name="materialButtonStyle">@style/Boton</item>
+        <item name="materialButtonOutlinedStyle">@style/BotonContorno</item>
+        <item name="textInputStyle">@style/CampoTexto</item>
     </style>
 
     <style name="Theme.GestorTrabajo" parent="Base.Theme.GestorTrabajo" />
+
+    <!-- Botones: todos con la misma altura y las esquinas de los campos -->
+    <style name="Boton" parent="Widget.Material3.Button">
+        <item name="android:minHeight">@dimen/altura_boton</item>
+        <item name="android:textSize">@dimen/texto_subtitulo</item>
+        <item name="cornerRadius">@dimen/radio_campo</item>
+    </style>
+
+    <style name="BotonContorno" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:minHeight">@dimen/altura_boton</item>
+        <item name="android:textSize">@dimen/texto_subtitulo</item>
+        <item name="cornerRadius">@dimen/radio_campo</item>
+        <item name="strokeColor">@color/borde_campo</item>
+    </style>
+
+    <!-- Botón de peligro: contorno y texto rojos -->
+    <style name="BotonPeligro" parent="BotonContorno">
+        <item name="android:textColor">@color/error</item>
+        <item name="strokeColor">@color/error</item>
+    </style>
+
+    <!-- Selector Cliente / Trabajador: dos botones pegados, el activo lleno del color de marca -->
+    <style name="Segmento" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textColor">@color/segmento_texto</item>
+        <item name="android:textSize">@dimen/texto_subtitulo</item>
+        <item name="backgroundTint">@color/segmento_fondo</item>
+        <item name="strokeColor">@color/borde_campo</item>
+        <item name="cornerRadius">@dimen/radio_campo</item>
+    </style>
+
+    <!-- Campos de texto: misma altura, esquinas de 12dp y borde de 1dp; en foco toman el color de marca -->
+    <style name="CampoTexto" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusTopStart">@dimen/radio_campo</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/radio_campo</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/radio_campo</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/radio_campo</item>
+        <item name="boxStrokeColor">@color/borde_campo_estado</item>
+        <item name="boxBackgroundColor">@color/superficie</item>
+        <item name="android:textColorHint">@color/gris</item>
+        <item name="errorIconDrawable">@null</item>
+    </style>
+
+    <!-- Campo que no se escribe: al tocarlo abre una hoja con la lista (zona, oficio) -->
+    <style name="CampoSeleccion">
+        <item name="android:focusable">false</item>
+        <item name="android:clickable">true</item>
+        <item name="android:cursorVisible">false</item>
+        <item name="android:importantForAutofill">no</item>
+        <item name="android:inputType">none</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <!-- Encabezado de cada pantalla: blanco, compacto y con una línea inferior -->
+    <style name="BarraSuperior">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">56dp</item>
+        <item name="android:background">@drawable/fondo_barra</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingStart">4dp</item>
+        <item name="android:paddingEnd">4dp</item>
+    </style>
+
+    <style name="TituloBarra">
+        <item name="android:textColor">@color/texto</item>
+        <item name="android:textSize">@dimen/texto_barra</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="SubtituloBarra">
+        <item name="android:textColor">@color/gris</item>
+        <item name="android:textSize">@dimen/texto_normal</item>
+    </style>
+
+    <!-- Ícono tocable de la barra (volver, actualizar): 24dp dibujado en un área de 48dp -->
+    <style name="BotonIcono">
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="android:scaleType">center</item>
+        <item name="android:tint">@color/texto</item>
+    </style>
+
+    <!-- Etiqueta de una sección de formulario -->
+    <style name="EtiquetaCampo">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/espacio_seccion</item>
+        <item name="android:layout_marginBottom">@dimen/espacio_pequeno</item>
+        <item name="android:textColor">@color/gris</item>
+        <item name="android:textSize">@dimen/texto_normal</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- Línea de una tarjeta con un ícono pequeño a la izquierda (ubicación, oficio, cliente) -->
+    <style name="FilaIcono">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">6dp</item>
+        <item name="android:drawablePadding">8dp</item>
+        <item name="android:drawableTint">@color/gris</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">@color/gris</item>
+        <item name="android:textSize">@dimen/texto_normal</item>
+    </style>
+
+    <!-- Foto de perfil redonda (ShapeableImageView) -->
+    <style name="FotoRedonda">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <!-- Etiqueta de estado: píldora compacta; el fondo y el color del texto los pone EstadoSolicitud o EstadoPropuesta -->
+    <style name="EtiquetaEstado">
+        <item name="android:background">@drawable/fondo_etiqueta</item>
+        <item name="android:textColor">@color/neutro_texto</item>
+        <item name="android:textSize">@dimen/texto_pequeno</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:paddingStart">10dp</item>
+        <item name="android:paddingEnd">10dp</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingBottom">4dp</item>
+    </style>
+
+    <!-- Filtros de las listas: una sola opción activa, relleno suave del color de marca -->
+    <style name="FiltroChip" parent="Widget.Material3.Chip.Filter">
+        <item name="chipStrokeColor">@color/borde_campo</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="checkedIconVisible">false</item>
+    </style>
+
+    <!-- Oficios del trabajador: varias opciones, con la marca de selección visible -->
+    <style name="OficioChip" parent="Widget.Material3.Chip.Filter">
+        <item name="chipStrokeColor">@color/borde_campo</item>
+        <item name="chipStrokeWidth">1dp</item>
+    </style>
+
+    <!-- Barra inferior: blanca, inactivas en gris y activa en el color de marca -->
+    <style name="BarraInferior" parent="Widget.Material3.BottomNavigationView">
+        <item name="backgroundTint">@color/superficie</item>
+        <item name="itemIconTint">@color/barra_item</item>
+        <item name="itemTextColor">@color/barra_item</item>
+        <item name="labelVisibilityMode">labeled</item>
+        <item name="paddingBottomSystemWindowInsets">false</item>
+        <item name="paddingLeftSystemWindowInsets">false</item>
+        <item name="paddingRightSystemWindowInsets">false</item>
+        <item name="elevation">8dp</item>
+    </style>
 </resources>

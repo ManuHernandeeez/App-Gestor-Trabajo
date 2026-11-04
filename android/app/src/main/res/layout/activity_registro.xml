@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/raiz"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/superficie"
+    android:orientation="vertical">
+
+    <LinearLayout style="@style/BarraSuperior">
+
+        <ImageButton
+            android:id="@+id/btnVolver"
+            style="@style/BotonIcono"
+            android:contentDescription="@string/volver"
+            android:onClick="volver"
+            android:src="@drawable/ic_atras" />
+
+        <TextView
+            android:id="@+id/txtTituloBarra"
+            style="@style/TituloBarra"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_weight="1"
+            android:text="@string/titulo_registro" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/fondo">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/espacio_pantalla">
+
+            <TextView
+                style="@style/EtiquetaCampo"
+                android:layout_marginTop="@dimen/espacio_pequeno"
+                android:text="@string/etiqueta_tipo_cuenta" />
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/vistaRol"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:checkedButton="@+id/btnRolCliente"
+                app:selectionRequired="true"
+                app:singleSelection="true">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnRolCliente"
+                    style="@style/Segmento"
+                    android:text="@string/rol_cliente" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnRolTrabajador"
+                    style="@style/Segmento"
+                    android:text="@string/rol_trabajador" />
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/espacio_seccion"
+                android:hint="@string/hint_nombre">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtNombre"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="personName"
+                    android:imeOptions="actionNext"
+                    android:inputType="textPersonName|textCapWords"
+                    android:maxLength="100" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/espacio_pequeno"
+                android:id="@+id/capaCorreo"
+                android:hint="@string/hint_correo">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtCorreo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="emailAddress"
+                    android:imeOptions="actionNext"
+                    android:inputType="textEmailAddress" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/espacio_pequeno"
+                android:id="@+id/capaClave"
+                android:hint="@string/hint_clave"
+                app:endIconMode="password_toggle"
+                app:helperText="@string/ayuda_clave">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtClave"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="newPassword"
+                    android:imeOptions="actionNext"
+                    android:inputType="textPassword"
+                    android:maxLength="72" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/espacio_pequeno"
+                android:id="@+id/capaTelefono"
+                android:hint="@string/hint_telefono"
+                app:placeholderText="@string/ejemplo_telefono"
+                app:prefixText="@string/prefijo_telefono">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtTelefono"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="phoneNational"
+                    android:imeOptions="actionNext"
+                    android:inputType="phone" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Solo trabajador -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/vistaDui"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/espacio_pequeno"
+                android:hint="@string/hint_dui"
+                android:visibility="gone"
+                app:helperText="@string/ayuda_dui"
+                app:placeholderText="@string/ejemplo_dui">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtDui"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:digits="0123456789-"
+                    android:imeOptions="actionDone"
+                    android:importantForAutofill="no"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/txtZona"
+                style="@style/EtiquetaCampo"
+                android:text="@string/etiqueta_zona_cliente" />
+
+            <!-- Una colonia para el cliente o varias para el trabajador; lo prepara SelectorZona -->
+            <include layout="@layout/campos_zona" />
+
+            <!-- Solo trabajador -->
+            <LinearLayout
+                android:id="@+id/vistaTrabajo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    style="@style/EtiquetaCampo"
+                    android:text="@string/etiqueta_oficios" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/vistaOficios"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:chipSpacingHorizontal="@dimen/espacio_pequeno"
+                    app:chipSpacingVertical="0dp" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnRegistrar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/espacio_seccion"
+                android:onClick="registrar"
+                android:text="@string/boton_registrar" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

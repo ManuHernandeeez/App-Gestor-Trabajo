@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/raiz"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/superficie"
+    android:orientation="vertical">
+
+    <LinearLayout style="@style/BarraSuperior">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/espacio_pequeno"
+            android:paddingBottom="@dimen/espacio_pequeno">
+
+            <TextView
+                android:id="@+id/txtTitulo"
+                style="@style/TituloBarra"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/titulo_perfil" />
+
+            <TextView
+                android:id="@+id/txtRol"
+                style="@style/SubtituloBarra"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btnActualizar"
+            style="@style/BotonIcono"
+            android:contentDescription="@string/actualizar"
+            android:onClick="actualizar"
+            android:src="@drawable/ic_refrescar" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/fondo">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/espacio_pantalla">
+
+            <TextView
+                android:id="@+id/txtCargando"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="@dimen/espacio_pantalla"
+                android:text="@string/cargando"
+                android:textColor="@color/gris"
+                android:textSize="@dimen/texto_subtitulo" />
+
+            <LinearLayout
+                android:id="@+id/vistaPerfil"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/fondo_tarjeta"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/espacio_tarjeta">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/imgFoto"
+                        android:layout_width="@dimen/foto_perfil"
+                        android:layout_height="@dimen/foto_perfil"
+                        android:contentDescription="@string/descripcion_foto"
+                        android:scaleType="centerCrop"
+                        app:shapeAppearanceOverlay="@style/FotoRedonda" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/espacio_pantalla"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/txtCalificacion"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/texto"
+                            android:textSize="@dimen/texto_normal" />
+
+                        <Button
+                            android:id="@+id/btnCambiarFoto"
+                            style="@style/BotonContorno"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/espacio_pequeno"
+                            android:minHeight="44dp"
+                            android:onClick="cambiarFoto"
+                            android:text="@string/cambiar_foto"
+                            android:textSize="@dimen/texto_normal" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/espacio_seccion"
+                    android:hint="@string/hint_nombre">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edtNombre"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:autofillHints="personName"
+                        android:imeOptions="actionNext"
+                        android:inputType="textPersonName|textCapWords"
+                        android:maxLength="100" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/espacio_pequeno"
+                    android:id="@+id/capaTelefono"
+                    android:hint="@string/hint_telefono"
+                    app:placeholderText="@string/ejemplo_telefono"
+                    app:prefixText="@string/prefijo_telefono">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edtTelefono"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:autofillHints="phoneNational"
+                        android:imeOptions="actionDone"
+                        android:inputType="phone" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Solo trabajador: el DUI se muestra enmascarado y no se edita -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/vistaDui"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/espacio_pequeno"
+                    android:enabled="false"
+                    android:hint="@string/etiqueta_dui"
+                    android:visibility="gone">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/txtDui"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:enabled="false"
+                        android:inputType="none" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/txtZona"
+                    style="@style/EtiquetaCampo"
+                    android:text="@string/etiqueta_zona_cliente" />
+
+                <!-- Una colonia para el cliente o varias para el trabajador; lo prepara SelectorZona -->
+                <include layout="@layout/campos_zona" />
+
+                <!-- Solo trabajador -->
+                <LinearLayout
+                    android:id="@+id/vistaTrabajo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        style="@style/EtiquetaCampo"
+                        android:text="@string/etiqueta_oficios" />
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/vistaOficios"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:chipSpacingHorizontal="@dimen/espacio_pequeno"
+                        app:chipSpacingVertical="0dp" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btnGuardar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/espacio_seccion"
+                    android:onClick="guardar"
+                    android:text="@string/boton_guardar" />
+
+                <Button
+                    android:id="@+id/btnCerrarSesion"
+                    style="@style/BotonPeligro"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/espacio_pequeno"
+                    android:onClick="cerrarSesion"
+                    android:text="@string/cerrar_sesion" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Pantalla compartida: Barra.preparar deja visible solo la barra del rol -->
+    <include layout="@layout/barra_cliente" />
+
+    <include layout="@layout/barra_trabajador" />
+</LinearLayout>

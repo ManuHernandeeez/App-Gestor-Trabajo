@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="espacio_pantalla">16dp</dimen>
+    <dimen name="espacio_tarjeta">16dp</dimen>
+    <dimen name="espacio_pequeno">8dp</dimen>
+    <dimen name="espacio_medio">12dp</dimen>
+    <dimen name="espacio_seccion">20dp</dimen>
+    <dimen name="radio_tarjeta">12dp</dimen>
+    <dimen name="radio_campo">12dp</dimen>
+    <dimen name="altura_boton">52dp</dimen>
+    <dimen name="foto_perfil">88dp</dimen>
+    <dimen name="avatar">44dp</dimen>
+
+    <dimen name="texto_grande">26sp</dimen>
+    <dimen name="texto_titulo">22sp</dimen>
+    <dimen name="texto_barra">20sp</dimen>
+    <dimen name="texto_subtitulo">16sp</dimen>
+    <dimen name="texto_normal">14sp</dimen>
+    <dimen name="texto_pequeno">12sp</dimen>
+</resources>

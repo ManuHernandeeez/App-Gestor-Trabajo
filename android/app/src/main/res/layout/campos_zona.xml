@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Departamento, municipio y colonia: tres campos iguales que abren una hoja con la lista. Los prepara SelectorZona. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/capaDepartamento"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_departamento"
+        app:endIconContentDescription="@string/abrir_lista"
+        app:endIconDrawable="@drawable/ic_flecha_abajo"
+        app:endIconMode="custom">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtDepartamento"
+            style="@style/CampoSeleccion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/capaMunicipio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/espacio_pequeno"
+        android:hint="@string/hint_municipio"
+        app:endIconContentDescription="@string/abrir_lista"
+        app:endIconDrawable="@drawable/ic_flecha_abajo"
+        app:endIconMode="custom">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtMunicipio"
+            style="@style/CampoSeleccion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/capaColonia"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/espacio_pequeno"
+        android:hint="@string/hint_colonia"
+        app:endIconContentDescription="@string/abrir_lista"
+        app:endIconDrawable="@drawable/ic_flecha_abajo"
+        app:endIconMode="custom">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtColonia"
+            style="@style/CampoSeleccion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+</LinearLayout>

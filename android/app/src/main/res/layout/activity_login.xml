@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/raiz"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <ImageView
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/fondo_marca"
+            android:importantForAccessibility="no"
+            android:padding="16dp"
+            android:src="@drawable/ic_maletin"
+            app:tint="@color/white" />
+
+        <TextView
+            android:id="@+id/txtTitulo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/espacio_seccion"
+            android:text="@string/app_name"
+            android:textColor="@color/texto"
+            android:textSize="@dimen/texto_grande"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="32dp"
+            android:text="@string/login_subtitulo"
+            android:textColor="@color/gris"
+            android:textSize="@dimen/texto_subtitulo" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_correo">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtCorreo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="emailAddress"
+                android:imeOptions="actionNext"
+                android:inputType="textEmailAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/espacio_medio"
+            android:hint="@string/hint_clave"
+            app:endIconMode="password_toggle">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtClave"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="password"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/btnEntrar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/espacio_seccion"
+            android:onClick="entrar"
+            android:text="@string/boton_entrar" />
+
+        <Button
+            android:id="@+id/btnCrearCuenta"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="crearCuenta"
+            android:text="@string/boton_crear_cuenta" />
+
+        <!-- Cuentas de demostración: plegadas hasta que se toca el título -->
+        <LinearLayout
+            android:id="@+id/vistaPruebas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/espacio_seccion"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/btnPruebas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:drawableEnd="@drawable/ic_flecha_abajo"
+                android:drawableTint="@color/gris"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:onClick="alternarPruebas"
+                android:text="@string/pruebas_titulo"
+                android:textColor="@color/gris"
+                android:textSize="@dimen/texto_normal"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/vistaCuentasPrueba"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/espacio_pequeno"
+                    android:text="@string/pruebas_ayuda"
+                    android:textColor="@color/gris"
+                    android:textSize="@dimen/texto_pequeno" />
+
+                <Button
+                    android:id="@+id/btnClientePrueba"
+                    style="@style/BotonContorno"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="44dp"
+                    android:onClick="entrarDePrueba"
+                    android:tag="cliente.demo@example.com"
+                    android:text="@string/prueba_cliente"
+                    android:textSize="@dimen/texto_normal" />
+
+                <Button
+                    android:id="@+id/btnCliente2Prueba"
+                    style="@style/BotonContorno"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="44dp"
+                    android:onClick="entrarDePrueba"
+                    android:tag="cliente2.demo@example.com"
+                    android:text="@string/prueba_cliente2"
+                    android:textSize="@dimen/texto_normal" />
+
+                <Button
+                    android:id="@+id/btnTrabajadorPrueba"
+                    style="@style/BotonContorno"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="44dp"
+                    android:onClick="entrarDePrueba"
+                    android:tag="trabajador.demo@example.com"
+                    android:text="@string/prueba_trabajador"
+                    android:textSize="@dimen/texto_normal" />
+
+                <Button
+                    android:id="@+id/btnTrabajador2Prueba"
+                    style="@style/BotonContorno"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="44dp"
+                    android:onClick="entrarDePrueba"
+                    android:tag="trabajador2.demo@example.com"
+                    android:text="@string/prueba_trabajador2"
+                    android:textSize="@dimen/texto_normal" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

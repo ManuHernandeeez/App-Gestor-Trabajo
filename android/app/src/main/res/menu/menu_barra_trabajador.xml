@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/btnBarraTrabajos"
+        android:icon="@drawable/ic_maletin"
+        android:title="@string/barra_trabajos" />
+    <item
+        android:id="@+id/btnBarraPropuestas"
+        android:icon="@drawable/ic_propuestas"
+        android:title="@string/barra_mis_propuestas" />
+    <item
+        android:id="@+id/btnBarraPerfil"
+        android:icon="@drawable/ic_persona"
+        android:title="@string/barra_perfil" />
+</menu>

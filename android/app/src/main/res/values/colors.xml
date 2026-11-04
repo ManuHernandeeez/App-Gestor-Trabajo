@@ -2,4 +2,33 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Marca: un solo color para botones, pestañas activas e íconos destacados -->
+    <color name="principal">#065F46</color>
+    <color name="principal_oscuro">#064E3B</color>
+    <color name="principal_suave">#D1FAE5</color>
+
+    <!-- Neutros -->
+    <color name="fondo">#F8FAFC</color>
+    <color name="superficie">#FFFFFF</color>
+    <color name="texto">#0F172A</color>
+    <color name="gris">#64748B</color>
+    <color name="borde">#E2E8F0</color>
+    <color name="borde_campo">#CBD5E1</color>
+    <color name="borde_fuerte">#94A3B8</color>
+
+    <!-- Funcionales -->
+    <color name="error">#DC2626</color>
+    <color name="alerta">#F59E0B</color>
+
+    <!-- Estados en pastel: fondo y texto de cada familia -->
+    <color name="aviso_fondo">#FEF3C7</color>
+    <color name="aviso_texto">#92400E</color>
+    <color name="aviso_borde">#FDE68A</color>
+    <color name="info_fondo">#DBEAFE</color>
+    <color name="info_texto">#1E40AF</color>
+    <color name="exito_fondo">#D1FAE5</color>
+    <color name="exito_texto">#065F46</color>
+    <color name="neutro_fondo">#F3F4F6</color>
+    <color name="neutro_texto">#4B5563</color>
 </resources>

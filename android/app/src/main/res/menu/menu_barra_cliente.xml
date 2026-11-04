@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/btnBarraSolicitudes"
+        android:icon="@drawable/ic_solicitudes"
+        android:title="@string/barra_solicitudes" />
+    <item
+        android:id="@+id/btnBarraPerfil"
+        android:icon="@drawable/ic_persona"
+        android:title="@string/barra_perfil" />
+</menu>

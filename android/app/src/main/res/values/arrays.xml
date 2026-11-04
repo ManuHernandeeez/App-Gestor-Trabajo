@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Mismo orden que ESTADOS en MisSolicitudesActivity -->
+    <string-array name="filtro_estados">
+        <item>Todas</item>
+        <item>Publicadas</item>
+        <item>Asignadas</item>
+        <item>En proceso</item>
+        <item>Finalizadas</item>
+        <item>Canceladas</item>
+        <item>Vencidas</item>
+    </string-array>
+
+    <!-- Mismo orden que ESTADOS en MisPropuestasActivity -->
+    <string-array name="filtro_propuestas">
+        <item>Todas</item>
+        <item>Pendientes</item>
+        <item>Aceptadas</item>
+        <item>Rechazadas</item>
+        <item>Retiradas</item>
+    </string-array>
+</resources>

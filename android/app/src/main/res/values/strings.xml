@@ -1,3 +1,212 @@
 <resources>
     <string name="app_name">Gestor de Trabajo Rápido</string>
+
+    <!-- Login -->
+    <string name="login_subtitulo">Encuentra o publica trabajos de tu zona</string>
+    <string name="hint_correo">Correo</string>
+    <string name="hint_clave">Contraseña</string>
+    <string name="boton_entrar">Entrar</string>
+    <string name="entrando">Entrando…</string>
+    <string name="falta_datos">Escribe tu correo y tu contraseña</string>
+    <string name="admin_pendiente">Las pantallas del administrador todavía no están listas</string>
+    <string name="boton_crear_cuenta">¿No tienes cuenta? Crear cuenta</string>
+
+    <!-- Acceso de prueba (se quita al hacer el login definitivo) -->
+    <string name="pruebas_titulo">Cuentas de demostración</string>
+    <string name="pruebas_ayuda">Solo para pruebas: entra sin escribir nada con las cuentas de ejemplo.</string>
+    <string name="prueba_cliente">Cliente: María Ejemplo</string>
+    <string name="prueba_cliente2">Cliente: Diana Ejemplo</string>
+    <string name="prueba_trabajador">Trabajador: Luis Ejemplo (electricidad)</string>
+    <string name="prueba_trabajador2">Trabajador: Pedro Ejemplo (electricidad)</string>
+
+    <!-- Comunes -->
+    <string name="actualizar">Actualizar</string>
+    <string name="cargando">Cargando...</string>
+    <string name="hola_nombre">Hola, %1$s</string>
+    <string name="error_cargar">No se pudieron cargar los datos. Toca Actualizar para reintentar</string>
+    <string name="error_conexion">No se pudo conectar con el servidor. Revisa que la API esté encendida</string>
+    <string name="sesion_vencida">Tu sesión venció. Inicia sesión de nuevo</string>
+    <string name="error_inesperado">Ocurrió un error inesperado</string>
+
+    <!-- Mis solicitudes (cliente) -->
+    <string name="titulo_mis_solicitudes">Mis solicitudes</string>
+    <string name="vacio_solicitudes">No hay solicitudes con este filtro</string>
+    <string name="propuestas_ninguna">Sin propuestas</string>
+    <string name="propuestas_una">1 propuesta</string>
+    <string name="propuestas_varias">%1$d propuestas</string>
+
+    <!-- Trabajos de mi zona (trabajador) -->
+    <string name="titulo_trabajos">Trabajos de mi zona</string>
+    <string name="vacio_trabajos">No hay trabajos nuevos en tu zona con este filtro</string>
+    <string name="todos_oficios">Todos los oficios</string>
+    <string name="ya_propuse">Ya propuse</string>
+    <string name="hace_menos_hora">Hace menos de 1 h</string>
+    <string name="hace_horas">Hace %1$d h</string>
+    <string name="hace_un_dia">Hace 1 día</string>
+    <string name="hace_dias">Hace %1$d días</string>
+    <string name="cliente_y_tiempo">%1$s · %2$s</string>
+
+    <!-- Detalle del trabajo (trabajador) -->
+    <string name="volver">Volver</string>
+    <string name="titulo_detalle_trabajo">Detalle del trabajo</string>
+    <string name="presupuesto_cliente">Presupuesto del cliente: %1$s</string>
+    <string name="aviso_contacto">El teléfono y la dirección exacta del cliente se te mostrarán cuando acepte tu propuesta.</string>
+    <string name="tu_propuesta">Tu propuesta</string>
+    <string name="hint_precio">Precio que cobras</string>
+    <string name="hint_mensaje">Mensaje para el cliente (opcional)</string>
+    <string name="boton_enviar_propuesta">Enviar propuesta</string>
+    <string name="enviando">Enviando…</string>
+    <string name="precio_invalido">Escribe un precio mayor que cero</string>
+    <string name="propuesta_enviada">Propuesta enviada</string>
+    <string name="mi_propuesta_pendiente">Ya enviaste tu propuesta de %1$s. Espera la respuesta del cliente.</string>
+    <string name="mi_propuesta_aceptada">El cliente aceptó tu propuesta de %1$s.</string>
+    <string name="mi_propuesta_rechazada">El cliente rechazó tu propuesta para este trabajo.</string>
+    <string name="mi_propuesta_retirada">Retiraste tu propuesta. Puedes enviar otra.</string>
+    <string name="solicitud_cerrada">Esta solicitud ya no recibe propuestas.</string>
+
+    <!-- Estados de una solicitud -->
+    <string name="estado_publicada">Publicada</string>
+    <string name="estado_asignada">Asignada</string>
+    <string name="estado_en_proceso">En proceso</string>
+    <string name="estado_finalizada">Finalizada</string>
+    <string name="estado_cancelada">Cancelada</string>
+    <string name="estado_vencida">Vencida</string>
+
+    <!-- Estados de una propuesta -->
+    <string name="estado_pendiente">Pendiente</string>
+    <string name="estado_aceptada">Aceptada</string>
+    <string name="estado_rechazada">Rechazada</string>
+    <string name="estado_retirada">Retirada</string>
+
+    <!-- Comunes de las listas y diálogos -->
+    <string name="cancelar">Cancelar</string>
+
+    <!-- Avisos al pulsar Atrás -->
+    <string name="boton_salir">Salir</string>
+    <string name="boton_quedarme">Quedarme</string>
+    <string name="boton_seguir_editando">Seguir editando</string>
+    <string name="salir_titulo">¿Salir de la aplicación?</string>
+    <string name="salir_mensaje">Se cerrará Gestor de Trabajo Rápido.</string>
+    <string name="cancelar_registro_titulo">¿Cancelar el registro?</string>
+    <string name="cancelar_registro_mensaje">Si sales ahora, se perderán los datos que escribiste.</string>
+    <string name="descartar_solicitud_titulo">¿Descartar la solicitud?</string>
+    <string name="descartar_solicitud_mensaje">Todavía no la has publicado. Si sales, se perderá lo que escribiste.</string>
+    <string name="descartar_propuesta_titulo">¿Descartar tu propuesta?</string>
+    <string name="descartar_propuesta_mensaje">Todavía no la has enviado. Si sales, se perderá lo que escribiste.</string>
+    <string name="sin_guardar_titulo">¿Salir sin guardar?</string>
+    <string name="sin_guardar_mensaje">Tienes cambios sin guardar en tu perfil. Si sales, se perderán.</string>
+    <string name="sin_calificaciones">Sin calificaciones</string>
+
+    <!-- Barras inferiores -->
+    <string name="barra_solicitudes">Solicitudes</string>
+    <string name="barra_trabajos">Trabajos</string>
+    <string name="barra_mis_propuestas">Mis propuestas</string>
+    <string name="barra_perfil">Perfil</string>
+
+    <!-- Propuestas de una solicitud (cliente) -->
+    <string name="titulo_propuestas">Propuestas</string>
+    <string name="tu_presupuesto">Tu presupuesto: %1$s</string>
+    <string name="indicacion_elegir">Elige una propuesta. Al aceptar una, las demás se rechazan.</string>
+    <string name="indicacion_asignada">Esta solicitud ya tiene un trabajador asignado.</string>
+    <string name="vacio_propuestas">Todavía no hay propuestas para esta solicitud</string>
+    <string name="boton_aceptar">Aceptar</string>
+    <string name="boton_rechazar">Rechazar</string>
+    <string name="precio_propuesto">Precio propuesto</string>
+    <string name="aceptar_titulo">Aceptar propuesta</string>
+    <string name="aceptar_mensaje">¿Aceptar la propuesta de %1$s por %2$s? Las demás propuestas se rechazarán.</string>
+    <string name="rechazar_titulo">Rechazar propuesta</string>
+    <string name="rechazar_mensaje">¿Rechazar la propuesta de %1$s por %2$s?</string>
+    <string name="propuesta_aceptada_ok">Propuesta aceptada. El trabajo quedó asignado.</string>
+    <string name="propuesta_rechazada_ok">Propuesta rechazada</string>
+
+    <!-- Mis propuestas (trabajador) -->
+    <string name="titulo_mis_propuestas">Mis propuestas</string>
+    <string name="vacio_mis_propuestas">No tienes propuestas con este filtro</string>
+    <string name="tu_precio">Tu precio: %1$s</string>
+    <string name="presupuesto_valor">Presupuesto: %1$s</string>
+    <string name="cliente_y_estado">%1$s · Solicitud: %2$s</string>
+    <string name="boton_retirar">Retirar</string>
+    <string name="retirar_titulo">Retirar propuesta</string>
+    <string name="retirar_mensaje">¿Retirar tu propuesta de %1$s para «%2$s»? Podrás enviar otra mientras la solicitud siga publicada.</string>
+    <string name="propuesta_retirada_ok">Propuesta retirada</string>
+
+    <!-- Nueva solicitud (cliente) -->
+    <string name="boton_nueva_solicitud">Nueva solicitud</string>
+    <string name="titulo_nueva_solicitud">Nueva solicitud</string>
+    <string name="hint_titulo">Título (por ejemplo: Cambio de tomacorrientes)</string>
+    <string name="hint_descripcion">Describe el trabajo</string>
+    <string name="etiqueta_zona">Zona del trabajo</string>
+    <string name="hint_presupuesto">Presupuesto</string>
+    <string name="hint_direccion">Dirección exacta</string>
+    <string name="ayuda_direccion">Solo la verá el trabajador que aceptes</string>
+    <string name="boton_publicar">Publicar solicitud</string>
+    <string name="publicando">Publicando…</string>
+    <string name="falta_titulo">Escribe un título</string>
+    <string name="falta_descripcion">Describe el trabajo</string>
+    <string name="falta_oficio_solicitud">Elige el oficio</string>
+    <string name="falta_colonia">Elige la colonia</string>
+    <string name="falta_departamento">Primero elige el departamento</string>
+    <string name="falta_municipio">Primero elige el municipio</string>
+    <string name="presupuesto_invalido">Escribe un presupuesto mayor que cero</string>
+    <string name="falta_direccion">Escribe la dirección exacta</string>
+    <string name="solicitud_publicada">Solicitud publicada</string>
+
+    <!-- Zona y colonias (registro, perfil y nueva solicitud) -->
+    <string name="hint_departamento">Departamento</string>
+    <string name="hint_municipio">Municipio</string>
+    <string name="hint_colonia">Colonia</string>
+    <string name="hint_colonias_trabajo">Colonias donde trabajas</string>
+    <string name="hint_oficio">Oficio</string>
+    <string name="titulo_elegir_departamento">Elegir departamento</string>
+    <string name="titulo_elegir_municipio">Elegir municipio</string>
+    <string name="titulo_elegir_colonia">Elegir colonia</string>
+    <string name="titulo_elegir_colonias">Elegir colonias</string>
+    <string name="titulo_elegir_oficio">Elegir oficio</string>
+    <string name="abrir_lista">Abrir lista</string>
+    <string name="buscar">Buscar</string>
+    <string name="sin_resultados">Sin resultados</string>
+    <string name="etiqueta_zona_cliente">Zona donde vives</string>
+    <string name="etiqueta_zona_trabajo">Zona donde trabajas</string>
+    <string name="etiqueta_oficios">Oficios que realizas</string>
+
+    <!-- Registro -->
+    <string name="titulo_registro">Crear cuenta</string>
+    <string name="etiqueta_tipo_cuenta">Tipo de cuenta</string>
+    <string name="rol_cliente">Cliente</string>
+    <string name="rol_trabajador">Trabajador</string>
+    <string name="hint_nombre">Nombre completo</string>
+    <string name="hint_telefono">Teléfono</string>
+    <string name="prefijo_telefono">+503</string>
+    <string name="ejemplo_telefono">0000-0000</string>
+    <string name="hint_dui">DUI</string>
+    <string name="ejemplo_dui">00000000-0</string>
+    <string name="ayuda_clave">De 8 a 72 caracteres</string>
+    <string name="ayuda_dui">El servidor lo valida al crear la cuenta</string>
+    <string name="boton_registrar">Crear cuenta</string>
+    <string name="falta_nombre">Escribe tu nombre</string>
+    <string name="correo_invalido">Escribe un correo válido</string>
+    <string name="clave_invalida">La contraseña debe tener de 8 a 72 caracteres</string>
+    <string name="telefono_invalido">El teléfono debe tener 8 dígitos</string>
+    <string name="dui_formato">El DUI debe tener 9 dígitos</string>
+    <string name="creando_cuenta">Creando cuenta…</string>
+    <string name="falta_colonias_trabajo">Elige al menos una colonia donde trabajas</string>
+    <string name="falta_oficio">Elige al menos un oficio</string>
+    <string name="cuenta_creada">Cuenta creada. Ya puedes iniciar sesión</string>
+
+    <!-- Perfil (cliente y trabajador) -->
+    <string name="titulo_perfil">Perfil y zona</string>
+    <string name="descripcion_foto">Foto de perfil</string>
+    <string name="cambiar_foto">Cambiar foto</string>
+    <string name="subiendo_foto">Subiendo foto…</string>
+    <string name="foto_actualizada">Foto actualizada</string>
+    <string name="foto_muy_grande">La foto no puede pasar de 2 MB</string>
+    <string name="foto_no_leida">No se pudo leer la foto elegida</string>
+    <string name="sin_selector_fotos">No hay una aplicación para elegir fotos en este teléfono</string>
+    <string name="calificacion_perfil">Calificación: %1$s</string>
+    <string name="etiqueta_dui">DUI (validado, no se puede cambiar)</string>
+    <string name="boton_guardar">Guardar cambios</string>
+    <string name="perfil_guardado">Perfil guardado</string>
+    <string name="cerrar_sesion">Cerrar sesión</string>
+    <string name="cerrar_sesion_mensaje">¿Quieres cerrar tu sesión?</string>
+    <string name="guardando">Guardando…</string>
 </resources>
