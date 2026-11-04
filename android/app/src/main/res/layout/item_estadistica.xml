@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Una cifra del resumen del administrador. Va dentro de un GridLayout de dos columnas -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_margin="6dp"
+    android:background="@drawable/fondo_tarjeta"
+    android:orientation="vertical"
+    android:layout_columnWeight="1"
+    android:padding="@dimen/espacio_tarjeta">
+
+    <TextView
+        android:id="@+id/txtValor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/principal"
+        android:textSize="@dimen/texto_grande"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txtEtiqueta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/gris"
+        android:textSize="@dimen/texto_normal" />
+</LinearLayout>

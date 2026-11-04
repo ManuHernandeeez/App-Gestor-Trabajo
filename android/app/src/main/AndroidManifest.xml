@@ -43,6 +43,12 @@
             android:name=".CalificarActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
+        <!-- Administrador -->
+        <activity android:name=".AdminCatalogosActivity" />
+        <activity
+            android:name=".AdminUsuariosActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+
         <!-- Cliente -->
         <activity android:name=".MisSolicitudesActivity" />
         <activity

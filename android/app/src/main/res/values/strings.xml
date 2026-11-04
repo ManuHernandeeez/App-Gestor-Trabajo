@@ -8,7 +8,6 @@
     <string name="boton_entrar">Entrar</string>
     <string name="entrando">Entrando…</string>
     <string name="falta_datos">Escribe tu correo y tu contraseña</string>
-    <string name="admin_pendiente">Las pantallas del administrador todavía no están listas</string>
     <string name="boton_crear_cuenta">¿No tienes cuenta? Crear cuenta</string>
 
     <!-- Acceso de prueba (se quita al hacer el login definitivo) -->
@@ -174,6 +173,62 @@
     <string name="sync_avisos_varios">%1$d avisos:</string>
     <string name="sync_y_mas">y %1$d más</string>
     <string name="sync_entendido">Entendido</string>
+
+    <!-- Administración: catálogos -->
+    <string name="barra_catalogos">Catálogos</string>
+    <string name="barra_usuarios">Usuarios y reportes</string>
+    <string name="titulo_administracion">Administración</string>
+    <string name="subtitulo_catalogos">Catálogos del sistema</string>
+    <string name="pestana_oficios">Oficios</string>
+    <string name="pestana_zonas">Zonas</string>
+    <string name="nota_borrado_logico">Desactivar un elemento no borra el historial. Los desactivados dejan de ofrecerse en la app.</string>
+    <string name="vacio_catalogo">No hay elementos todavía</string>
+    <string name="editar">Editar</string>
+    <string name="activo">Activo</string>
+    <string name="agregar_oficio">Agregar oficio</string>
+    <string name="agregar_departamento">Agregar departamento</string>
+    <string name="agregar_municipio">Agregar municipio</string>
+    <string name="agregar_colonia">Agregar colonia</string>
+    <string name="agregar_nombre">Agregar</string>
+    <string name="editar_nombre">Editar nombre</string>
+    <string name="hint_nombre_catalogo">Nombre</string>
+    <string name="boton_guardar_nombre">Guardar</string>
+    <string name="falta_nombre_catalogo">Escribe un nombre</string>
+    <string name="catalogo_agregado">Agregado</string>
+    <string name="catalogo_guardado">Cambios guardados</string>
+    <string name="catalogo_activado">Activado</string>
+    <string name="catalogo_desactivado">Desactivado</string>
+
+    <!-- Administración: usuarios y reportes -->
+    <string name="titulo_usuarios_reportes">Usuarios y reportes</string>
+    <string name="pestana_reportes">Reportes</string>
+    <string name="pestana_usuarios">Usuarios</string>
+    <string name="hint_buscar_usuario">Buscar por nombre o correo</string>
+    <string name="nota_auditoria">Solo el administrador puede ver DUI, teléfono y correo. Toca un usuario para verlos.</string>
+    <string name="vacio_usuarios">No se encontraron usuarios</string>
+    <string name="rol_administrador">Administrador</string>
+    <string name="usuario_activo">Activo</string>
+    <string name="usuario_suspendido">Suspendido</string>
+    <string name="boton_suspender">Suspender</string>
+    <string name="boton_reactivar">Reactivar</string>
+    <string name="suspender_titulo">Suspender usuario</string>
+    <string name="suspender_mensaje">%1$s ya no podrá iniciar sesión hasta que lo reactives.</string>
+    <string name="reactivar_titulo">Reactivar usuario</string>
+    <string name="reactivar_mensaje">%1$s podrá volver a iniciar sesión.</string>
+    <string name="usuario_suspendido_ok">Usuario suspendido</string>
+    <string name="usuario_reactivado_ok">Usuario reactivado</string>
+    <string name="auditoria_correo">Correo: %1$s</string>
+    <string name="auditoria_telefono">Teléfono: %1$s</string>
+    <string name="auditoria_dui">DUI: %1$s</string>
+    <string name="auditoria_zona">Zona: %1$s</string>
+    <string name="auditoria_registro">Registro: %1$s</string>
+    <string name="reporte_solicitudes">Solicitudes en total</string>
+    <string name="reporte_promedio">Calificación promedio</string>
+    <string name="reporte_calificaciones">Calificaciones</string>
+    <string name="reporte_clientes">Clientes</string>
+    <string name="reporte_trabajadores">Trabajadores</string>
+    <string name="reporte_suspendidos">Cuentas suspendidas</string>
+    <string name="sin_valor">—</string>
 
     <!-- Calificar (cliente y trabajador) -->
     <string name="titulo_calificar">Calificar</string>

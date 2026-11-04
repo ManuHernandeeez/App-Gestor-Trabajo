@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/raiz"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/superficie"
+    android:orientation="vertical">
+
+    <LinearLayout style="@style/BarraSuperior">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/espacio_pequeno"
+            android:paddingBottom="@dimen/espacio_pequeno">
+
+            <TextView
+                android:id="@+id/txtTitulo"
+                style="@style/TituloBarra"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/titulo_administracion" />
+
+            <TextView
+                android:id="@+id/txtSubtitulo"
+                style="@style/SubtituloBarra"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/subtitulo_catalogos" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btnSalir"
+            style="@style/BotonIcono"
+            android:contentDescription="@string/cerrar_sesion"
+            android:onClick="cerrarSesion"
+            android:src="@drawable/ic_salir" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/fondo"
+        android:orientation="vertical">
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/vistaPestana"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/espacio_pantalla"
+            app:checkedButton="@+id/btnPestanaOficios"
+            app:selectionRequired="true"
+            app:singleSelection="true"
+            xmlns:app="http://schemas.android.com/apk/res-auto">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnPestanaOficios"
+                style="@style/Segmento"
+                android:text="@string/pestana_oficios" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnPestanaZonas"
+                style="@style/Segmento"
+                android:text="@string/pestana_zonas" />
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        <LinearLayout
+            android:id="@+id/vistaRuta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/espacio_pequeno"
+            android:paddingEnd="@dimen/espacio_pantalla"
+            android:visibility="gone">
+
+            <ImageButton
+                android:id="@+id/btnSubir"
+                style="@style/BotonIcono"
+                android:contentDescription="@string/volver"
+                android:onClick="subir"
+                android:src="@drawable/ic_atras" />
+
+            <TextView
+                android:id="@+id/txtRuta"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/texto"
+                android:textSize="@dimen/texto_subtitulo"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <ListView
+                android:id="@+id/listaCatalogo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="@dimen/espacio_pequeno"
+                android:paddingStart="@dimen/espacio_pantalla"
+                android:paddingEnd="@dimen/espacio_pantalla" />
+
+            <TextView
+                android:id="@+id/txtVacio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:padding="@dimen/espacio_pantalla"
+                android:text="@string/cargando"
+                android:textColor="@color/gris"
+                android:textSize="@dimen/texto_subtitulo" />
+        </FrameLayout>
+
+        <Button
+            android:id="@+id/btnAgregar"
+            style="@style/BotonContorno"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/espacio_pantalla"
+            android:onClick="agregar" />
+
+        <TextView
+            android:id="@+id/txtNota"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/espacio_pantalla"
+            android:paddingEnd="@dimen/espacio_pantalla"
+            android:paddingBottom="@dimen/espacio_medio"
+            android:text="@string/nota_borrado_logico"
+            android:textColor="@color/gris"
+            android:textSize="@dimen/texto_normal" />
+
+        <include layout="@layout/barra_admin" />
+    </LinearLayout>
+</LinearLayout>

@@ -563,3 +563,107 @@ Content-Type: application/json
 
 PUT {{url}}/api/avisos/leidos
 Authorization: Bearer {{loginTrabajador.response.body.$.token}}
+
+### ----------------------------------------------------------------------------
+### Administración. Requiere el login del administrador de arriba (loginAdmin).
+### ----------------------------------------------------------------------------
+
+### Oficios con los inactivos incluidos. Un cliente o trabajador recibe 403 GT003
+
+GET {{url}}/api/admin/oficios
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+
+### Crear un oficio. Espera 201 con { id }
+
+# @name oficioNuevo
+POST {{url}}/api/admin/oficios
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+Content-Type: application/json
+
+{ "nombre": "Carpintería (ejemplo)" }
+
+### El mismo nombre otra vez. Espera 409 GT001
+
+POST {{url}}/api/admin/oficios
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+Content-Type: application/json
+
+{ "nombre": "Carpintería (ejemplo)" }
+
+### Desactivar el oficio: deja de salir en /api/catalogos/oficios pero no se borra. Espera 204
+
+PUT {{url}}/api/admin/oficios/{{oficioNuevo.response.body.$.id}}
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+Content-Type: application/json
+
+{ "activo": false }
+
+### Editar el nombre y reactivarlo. Espera 204
+
+PUT {{url}}/api/admin/oficios/{{oficioNuevo.response.body.$.id}}
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+Content-Type: application/json
+
+{ "nombre": "Carpintería general (ejemplo)", "activo": true }
+
+### Departamentos, municipios y colonias (con los inactivos). Los municipios y colonias se piden por su padre
+
+GET {{url}}/api/admin/departamentos
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+
+###
+
+GET {{url}}/api/admin/municipios?departamentoId={{departamentoId}}
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+
+###
+
+GET {{url}}/api/admin/colonias?municipioId={{municipioId}}
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+
+### Crear un municipio en un departamento. Espera 201. Con un departamento que no existe, 409 GT001
+
+POST {{url}}/api/admin/municipios
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+Content-Type: application/json
+
+{ "departamentoId": {{departamentoId}}, "nombre": "Municipio de ejemplo" }
+
+### Crear una colonia en un municipio. Espera 201
+
+POST {{url}}/api/admin/colonias
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+Content-Type: application/json
+
+{ "municipioId": {{municipioId}}, "nombre": "Colonia de ejemplo" }
+
+### Buscar usuarios por nombre o correo. No devuelve correo, teléfono ni DUI
+
+# @name busqueda
+GET {{url}}/api/admin/usuarios?q=demo
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+
+### Auditoría de un usuario (primero de la búsqueda): correo, teléfono, DUI y zona. Solo el administrador
+
+GET {{url}}/api/admin/usuarios/{{busqueda.response.body.$[0].id}}/auditoria
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+
+### Suspender a un usuario. Espera 204. Después su login responde 403 y su token deja de servir (401)
+
+PUT {{url}}/api/admin/usuarios/{{busqueda.response.body.$[0].id}}/suspender
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+
+### Reactivarlo. Espera 204
+
+PUT {{url}}/api/admin/usuarios/{{busqueda.response.body.$[0].id}}/reactivar
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+
+### Un administrador no se puede suspender. Espera 409 GT001 (usa el id del administrador)
+
+PUT {{url}}/api/admin/usuarios/{{loginAdmin.response.body.$.usuarioId}}/suspender
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+
+### Resumen para reportes: solicitudes por estado, calificaciones y cuentas
+
+GET {{url}}/api/admin/reportes/resumen
+Authorization: Bearer {{loginAdmin.response.body.$.token}}

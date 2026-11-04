@@ -51,6 +51,12 @@ public class Formato {
         return separado.replaceAll("\\p{M}", "").toLowerCase(Locale.ROOT);
     }
 
+    // Fecha ISO 8601 de la API en hora local, por ejemplo "03/11/2026"
+    public static String fecha(String iso) {
+        ZonedDateTime fecha = OffsetDateTime.parse(iso).atZoneSameInstant(ZoneId.systemDefault());
+        return fecha.format(DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.US));
+    }
+
     // Fecha ISO 8601 de la API en hora local: "15:30" si es de hoy y "03/11 15:30" si no
     public static String fechaHora(String iso) {
         ZonedDateTime fecha = OffsetDateTime.parse(iso).atZoneSameInstant(ZoneId.systemDefault());

@@ -26,6 +26,7 @@ builder.Services.AddScoped<CatalogoRepositorio>();
 builder.Services.AddScoped<CalificacionRepositorio>();
 builder.Services.AddScoped<MensajeRepositorio>();
 builder.Services.AddScoped<AvisoRepositorio>();
+builder.Services.AddScoped<AdminRepositorio>();
 builder.Services.AddHostedService<VencimientoTarea>();
 builder.Services.AddSingleton<HashServicio>();
 builder.Services.AddSingleton<FotoServicio>();

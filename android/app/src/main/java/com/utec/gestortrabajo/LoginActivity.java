@@ -125,12 +125,7 @@ public class LoginActivity extends AppCompatActivity {
     private void recibirSesion(String respuesta) {
         try {
             JSONObject json = new JSONObject(respuesta);
-            String rol = json.getString("rol");
-            if (rol.equals("administrador")) {
-                Toast.makeText(this, R.string.admin_pendiente, Toast.LENGTH_LONG).show();
-                return;
-            }
-            sesion.guardar(json.getString("token"), rol, json.getInt("usuarioId"), json.getString("nombre"));
+            sesion.guardar(json.getString("token"), json.getString("rol"), json.getInt("usuarioId"), json.getString("nombre"));
         } catch (JSONException e) {
             Toast.makeText(this, R.string.error_inesperado, Toast.LENGTH_LONG).show();
             return;
@@ -140,18 +135,22 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    // Cliente va a sus solicitudes y trabajador a los trabajos de su zona. Devuelve false si no hay pantalla para el rol.
-    // La pantalla recibe el extra "sincronizar" para pedir los mensajes y avisos nuevos al abrir la app.
+    // Cliente va a sus solicitudes, trabajador a los trabajos de su zona y administrador a los catálogos.
+    // Devuelve false si no hay pantalla para el rol.
+    // Cliente y trabajador reciben el extra "sincronizar" para pedir los mensajes y avisos nuevos al abrir la app.
     private boolean abrirMenu(String rol) {
         Intent intent;
         if (rol.equals("cliente")) {
             intent = new Intent(this, MisSolicitudesActivity.class);
+            intent.putExtra("sincronizar", true);
         } else if (rol.equals("trabajador")) {
             intent = new Intent(this, TrabajosZonaActivity.class);
+            intent.putExtra("sincronizar", true);
+        } else if (rol.equals("administrador")) {
+            intent = new Intent(this, AdminCatalogosActivity.class);
         } else {
             return false;
         }
-        intent.putExtra("sincronizar", true);
         startActivity(intent);
         return true;
     }

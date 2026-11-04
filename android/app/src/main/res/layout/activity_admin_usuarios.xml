@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/raiz"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/superficie"
+    android:orientation="vertical">
+
+    <LinearLayout style="@style/BarraSuperior">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/espacio_pequeno"
+            android:paddingBottom="@dimen/espacio_pequeno">
+
+            <TextView
+                android:id="@+id/txtTitulo"
+                style="@style/TituloBarra"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/titulo_usuarios_reportes" />
+
+            <TextView
+                android:id="@+id/txtSubtitulo"
+                style="@style/SubtituloBarra"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/titulo_administracion" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btnSalir"
+            style="@style/BotonIcono"
+            android:contentDescription="@string/cerrar_sesion"
+            android:onClick="cerrarSesion"
+            android:src="@drawable/ic_salir" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/fondo"
+        android:orientation="vertical">
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/vistaPestana"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/espacio_pantalla"
+            app:checkedButton="@+id/btnPestanaUsuarios"
+            app:selectionRequired="true"
+            app:singleSelection="true">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnPestanaReportes"
+                style="@style/Segmento"
+                android:text="@string/pestana_reportes" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnPestanaUsuarios"
+                style="@style/Segmento"
+                android:text="@string/pestana_usuarios" />
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        <!-- Reportes: las cifras se llenan desde el código -->
+        <ScrollView
+            android:id="@+id/vistaReportes"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp">
+
+                <TextView
+                    android:id="@+id/txtReportesEstado"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="@dimen/espacio_pantalla"
+                    android:text="@string/cargando"
+                    android:textColor="@color/gris"
+                    android:textSize="@dimen/texto_subtitulo" />
+
+                <GridLayout
+                    android:id="@+id/cuadriculaReportes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:columnCount="2" />
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- Usuarios -->
+        <LinearLayout
+            android:id="@+id/vistaUsuarios"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/espacio_pantalla"
+                android:layout_marginEnd="@dimen/espacio_pantalla"
+                android:hint="@string/hint_buscar_usuario"
+                app:startIconDrawable="@drawable/ic_buscar">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtBuscar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <ListView
+                    android:id="@+id/listaUsuarios"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:divider="@android:color/transparent"
+                    android:dividerHeight="@dimen/espacio_pequeno"
+                    android:padding="@dimen/espacio_pantalla" />
+
+                <TextView
+                    android:id="@+id/txtVacio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:padding="@dimen/espacio_pantalla"
+                    android:text="@string/cargando"
+                    android:textColor="@color/gris"
+                    android:textSize="@dimen/texto_subtitulo" />
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/espacio_pantalla"
+                android:paddingEnd="@dimen/espacio_pantalla"
+                android:paddingBottom="@dimen/espacio_medio"
+                android:text="@string/nota_auditoria"
+                android:textColor="@color/gris"
+                android:textSize="@dimen/texto_normal" />
+        </LinearLayout>
+
+        <include layout="@layout/barra_admin" />
+    </LinearLayout>
+</LinearLayout>

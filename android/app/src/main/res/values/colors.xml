@@ -29,6 +29,8 @@
     <color name="info_texto">#1E40AF</color>
     <color name="exito_fondo">#D1FAE5</color>
     <color name="exito_texto">#065F46</color>
+    <color name="error_fondo">#FEE2E2</color>
+    <color name="error_texto">#B91C1C</color>
     <color name="neutro_fondo">#F3F4F6</color>
     <color name="neutro_texto">#4B5563</color>
 </resources>

@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
-// Barra inferior por rol (barra_cliente y barra_trabajador). Cada pestaña abre su pantalla y cierra la actual.
+// Barra inferior por rol (barra_cliente, barra_trabajador y barra_admin). Cada pestaña abre su pantalla y cierra la actual.
 // Las pantallas compartidas, como Perfil, incluyen las dos barras: aquí se deja visible solo la del rol de la sesión.
 public class Barra {
 
@@ -35,13 +35,18 @@ public class Barra {
         String rol = new Sesion(pantalla).obtenerRol();
         BottomNavigationView barraCliente = pantalla.findViewById(R.id.barraCliente);
         BottomNavigationView barraTrabajador = pantalla.findViewById(R.id.barraTrabajador);
+        BottomNavigationView barraAdmin = pantalla.findViewById(R.id.barraAdmin);
         mostrar(barraCliente, rol.equals("cliente"));
         mostrar(barraTrabajador, rol.equals("trabajador"));
+        mostrar(barraAdmin, rol.equals("administrador"));
         if (rol.equals("cliente")) {
             return barraCliente;
         }
         if (rol.equals("trabajador")) {
             return barraTrabajador;
+        }
+        if (rol.equals("administrador")) {
+            return barraAdmin;
         }
         return null;
     }
@@ -72,6 +77,12 @@ public class Barra {
         }
         if (idPestana == R.id.btnBarraPropuestas) {
             return MisPropuestasActivity.class;
+        }
+        if (idPestana == R.id.btnBarraCatalogos) {
+            return AdminCatalogosActivity.class;
+        }
+        if (idPestana == R.id.btnBarraUsuarios) {
+            return AdminUsuariosActivity.class;
         }
         if (idPestana == R.id.btnBarraMensajes) {
             return MensajesActivity.class;
