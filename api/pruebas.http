@@ -1,0 +1,326 @@
+# Pruebas de la API para la extensión REST Client de VS Code (o el editor .http de Visual Studio).
+# Todos los datos son inventados. Pasos:
+#   1. Arranca la API:  cd api; dotnet run
+#   2. Corre los GET de catálogos, y copia aquí abajo los ids que respondan.
+#   3. Corre las peticiones en orden. Si ya registraste las cuentas de ejemplo, el registro responde 409
+#      (correo o DUI repetido) y puedes seguir con el login.
+
+@url = http://localhost:5000
+@departamentoId = 6
+@municipioId = 1
+@coloniaId = 1
+@coloniaOtraId = 2
+@oficioId = 1
+
+@correoCliente = cliente.demo@example.com
+@correoTrabajador = trabajador.demo@example.com
+@clave = Clave12345
+
+# Deben coincidir con Administrador:Correo y Administrador:Clave de user-secrets
+@correoAdmin = admin@example.com
+@claveAdmin = cambiar-por-la-clave-del-administrador
+
+### Catálogos (públicos)
+
+GET {{url}}/api/catalogos/departamentos
+
+###
+
+GET {{url}}/api/catalogos/departamentos/{{departamentoId}}/municipios
+
+###
+
+GET {{url}}/api/catalogos/municipios/{{municipioId}}/colonias
+
+###
+
+GET {{url}}/api/catalogos/oficios
+
+### Registro de un cliente. Espera 201 con { usuarioId }
+
+POST {{url}}/api/auth/registro
+Content-Type: application/json
+
+{
+  "rol": "cliente",
+  "nombre": "María Ejemplo",
+  "correo": "{{correoCliente}}",
+  "password": "{{clave}}",
+  "telefono": "7000-0201",
+  "municipioId": {{municipioId}},
+  "coloniaId": {{coloniaId}}
+}
+
+### El mismo correo otra vez. Espera 409 con codigo GT001
+
+POST {{url}}/api/auth/registro
+Content-Type: application/json
+
+{
+  "rol": "cliente",
+  "nombre": "María Ejemplo",
+  "correo": "{{correoCliente}}",
+  "password": "{{clave}}",
+  "telefono": "7000-0201",
+  "municipioId": {{municipioId}},
+  "coloniaId": {{coloniaId}}
+}
+
+### Registro de un trabajador. Espera 201 (DUI de ejemplo con dígito verificador válido)
+
+POST {{url}}/api/auth/registro
+Content-Type: application/json
+
+{
+  "rol": "trabajador",
+  "nombre": "Luis Ejemplo",
+  "correo": "{{correoTrabajador}}",
+  "password": "{{clave}}",
+  "telefono": "7000-0202",
+  "dui": "12345678-4",
+  "municipioId": {{municipioId}},
+  "oficios": [{{oficioId}}],
+  "colonias": [{{coloniaId}}, {{coloniaOtraId}}]
+}
+
+### Trabajador con DUI inválido (dígito verificador mal). Espera 409 GT001 y no se crea la cuenta
+
+POST {{url}}/api/auth/registro
+Content-Type: application/json
+
+{
+  "rol": "trabajador",
+  "nombre": "Pedro Ejemplo",
+  "correo": "pedro.demo@example.com",
+  "password": "{{clave}}",
+  "telefono": "7000-0203",
+  "dui": "12345678-9",
+  "municipioId": {{municipioId}},
+  "oficios": [{{oficioId}}],
+  "colonias": [{{coloniaId}}]
+}
+
+### Contraseña corta. Espera 400 SOLICITUD_INVALIDA
+
+POST {{url}}/api/auth/registro
+Content-Type: application/json
+
+{
+  "rol": "cliente",
+  "nombre": "Ana Ejemplo",
+  "correo": "ana.demo@example.com",
+  "password": "123",
+  "telefono": "7000-0204",
+  "municipioId": {{municipioId}},
+  "coloniaId": {{coloniaId}}
+}
+
+### Login del cliente. Espera 200 con { token, rol, usuarioId, nombre }
+
+# @name loginCliente
+POST {{url}}/api/auth/login
+Content-Type: application/json
+
+{ "correo": "{{correoCliente}}", "password": "{{clave}}" }
+
+### Login del trabajador
+
+# @name loginTrabajador
+POST {{url}}/api/auth/login
+Content-Type: application/json
+
+{ "correo": "{{correoTrabajador}}", "password": "{{clave}}" }
+
+### Contraseña incorrecta. Espera 401 NO_AUTENTICADO
+
+POST {{url}}/api/auth/login
+Content-Type: application/json
+
+{ "correo": "{{correoCliente}}", "password": "otra-clave-12345" }
+
+### Login del administrador (necesita Administrador:Correo y Administrador:Clave en user-secrets)
+
+# @name loginAdmin
+POST {{url}}/api/auth/login
+Content-Type: application/json
+
+{ "correo": "{{correoAdmin}}", "password": "{{claveAdmin}}" }
+
+### Perfil del cliente. Espera 200 con colonia y sin oficios
+
+GET {{url}}/api/perfil
+Authorization: Bearer {{loginCliente.response.body.$.token}}
+
+### Perfil del trabajador. Espera 200 con oficios, coloniasTrabajo y duiEnmascarado
+
+GET {{url}}/api/perfil
+Authorization: Bearer {{loginTrabajador.response.body.$.token}}
+
+### Perfil sin token. Espera 401 NO_AUTENTICADO
+
+GET {{url}}/api/perfil
+
+### Perfil con el token del administrador. Espera 403 GT003 (el perfil es de cliente y trabajador)
+
+GET {{url}}/api/perfil
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+
+### ----------------------------------------------------------------------------
+### Solicitudes y propuestas. Requiere haber aplicado .\bd\aplicar.ps1 (funciones de la tanda 4)
+### y haber corrido el registro y el login del cliente y del trabajador de arriba.
+### ----------------------------------------------------------------------------
+
+### El cliente publica una solicitud. Espera 201 con { id }
+
+# @name publicar
+POST {{url}}/api/solicitudes
+Authorization: Bearer {{loginCliente.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "oficioId": {{oficioId}},
+  "coloniaId": {{coloniaId}},
+  "titulo": "Cambio de tomacorrientes",
+  "descripcion": "Cuatro tomacorrientes en la sala (texto de ejemplo)",
+  "presupuesto": 40.00,
+  "direccionExacta": "Dirección inventada, casa 7"
+}
+
+### Presupuesto 0. Espera 409 GT001 con mensaje en español
+
+POST {{url}}/api/solicitudes
+Authorization: Bearer {{loginCliente.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "oficioId": {{oficioId}},
+  "coloniaId": {{coloniaId}},
+  "titulo": "Presupuesto inválido",
+  "descripcion": "Texto de ejemplo",
+  "presupuesto": 0,
+  "direccionExacta": "Dirección inventada"
+}
+
+### Un trabajador no puede publicar. Espera 403 GT003
+
+POST {{url}}/api/solicitudes
+Authorization: Bearer {{loginTrabajador.response.body.$.token}}
+Content-Type: application/json
+
+{ "oficioId": {{oficioId}}, "coloniaId": {{coloniaId}}, "titulo": "X", "descripcion": "X", "presupuesto": 10, "direccionExacta": "X" }
+
+### Mis solicitudes (cliente). Con ?estado=publicada filtra; un estado inventado da 400
+
+GET {{url}}/api/solicitudes/mias
+Authorization: Bearer {{loginCliente.response.body.$.token}}
+
+### El trabajador ve los trabajos de su zona, sin teléfono ni dirección. Con ?oficioId= filtra
+
+GET {{url}}/api/trabajos/zona
+Authorization: Bearer {{loginTrabajador.response.body.$.token}}
+
+### Un cliente no puede ver trabajos por zona. Espera 403 GT003
+
+GET {{url}}/api/trabajos/zona
+Authorization: Bearer {{loginCliente.response.body.$.token}}
+
+### Detalle visto por el trabajador: descripción, cliente abreviado, sin dirección ni teléfono
+
+GET {{url}}/api/solicitudes/{{publicar.response.body.$.id}}
+Authorization: Bearer {{loginTrabajador.response.body.$.token}}
+
+### Detalle visto por el dueño: nombre completo y número de propuestas
+
+GET {{url}}/api/solicitudes/{{publicar.response.body.$.id}}
+Authorization: Bearer {{loginCliente.response.body.$.token}}
+
+### El trabajador envía una propuesta. Espera 201 con { id }
+
+# @name propuesta1
+POST {{url}}/api/trabajos/{{publicar.response.body.$.id}}/propuestas
+Authorization: Bearer {{loginTrabajador.response.body.$.token}}
+Content-Type: application/json
+
+{ "precio": 35.00, "mensaje": "Puedo ir mañana (texto de ejemplo)" }
+
+### La misma propuesta otra vez. Espera 409 GT001
+
+POST {{url}}/api/trabajos/{{publicar.response.body.$.id}}/propuestas
+Authorization: Bearer {{loginTrabajador.response.body.$.token}}
+Content-Type: application/json
+
+{ "precio": 30.00 }
+
+### Registro y login de un segundo trabajador (DUI de ejemplo distinto)
+
+POST {{url}}/api/auth/registro
+Content-Type: application/json
+
+{
+  "rol": "trabajador",
+  "nombre": "Pedro Ejemplo",
+  "correo": "trabajador2.demo@example.com",
+  "password": "{{clave}}",
+  "telefono": "7000-0205",
+  "dui": "66666666-6",
+  "municipioId": {{municipioId}},
+  "oficios": [{{oficioId}}],
+  "colonias": [{{coloniaId}}]
+}
+
+###
+
+# @name loginTrabajador2
+POST {{url}}/api/auth/login
+Content-Type: application/json
+
+{ "correo": "trabajador2.demo@example.com", "password": "{{clave}}" }
+
+### Propuesta del segundo trabajador
+
+# @name propuesta2
+POST {{url}}/api/trabajos/{{publicar.response.body.$.id}}/propuestas
+Authorization: Bearer {{loginTrabajador2.response.body.$.token}}
+Content-Type: application/json
+
+{ "precio": 45.00, "mensaje": "Incluyo los materiales (texto de ejemplo)" }
+
+### Mis propuestas (trabajador). Con ?estado=pendiente filtra
+
+GET {{url}}/api/propuestas/mias
+Authorization: Bearer {{loginTrabajador.response.body.$.token}}
+
+### El cliente ve las propuestas de su solicitud, con el promedio de cada trabajador
+
+GET {{url}}/api/solicitudes/{{publicar.response.body.$.id}}/propuestas
+Authorization: Bearer {{loginCliente.response.body.$.token}}
+
+### Un trabajador no ve las propuestas de la solicitud. Espera 403 GT003
+
+GET {{url}}/api/solicitudes/{{publicar.response.body.$.id}}/propuestas
+Authorization: Bearer {{loginTrabajador.response.body.$.token}}
+
+### El cliente acepta la propuesta del primer trabajador. Espera 204. La otra queda rechazada
+
+POST {{url}}/api/propuestas/{{propuesta1.response.body.$.id}}/aceptar
+Authorization: Bearer {{loginCliente.response.body.$.token}}
+
+### Aceptar la propuesta del segundo trabajador ya no se puede. Espera 404 GT002
+
+POST {{url}}/api/propuestas/{{propuesta2.response.body.$.id}}/aceptar
+Authorization: Bearer {{loginCliente.response.body.$.token}}
+
+### La solicitud ahora está asignada, con 2 propuestas
+
+GET {{url}}/api/solicitudes/mias?estado=asignada
+Authorization: Bearer {{loginCliente.response.body.$.token}}
+
+### El segundo trabajador ve su propuesta rechazada
+
+GET {{url}}/api/propuestas/mias?estado=rechazada
+Authorization: Bearer {{loginTrabajador2.response.body.$.token}}
+
+### Retirar una propuesta ya aceptada. Espera 409 GT001
+
+PUT {{url}}/api/propuestas/{{propuesta1.response.body.$.id}}/retirar
+Authorization: Bearer {{loginTrabajador.response.body.$.token}}
