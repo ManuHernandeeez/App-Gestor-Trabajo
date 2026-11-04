@@ -2,6 +2,7 @@ using GestorTrabajoApi.Modelos;
 using GestorTrabajoApi.Repositorios;
 using GestorTrabajoApi.Seguridad;
 using GestorTrabajoApi.Servicios;
+using GestorTrabajoApi.Tareas;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi;
@@ -21,6 +22,8 @@ builder.Services.AddScoped<PerfilRepositorio>();
 builder.Services.AddScoped<SolicitudRepositorio>();
 builder.Services.AddScoped<PropuestaRepositorio>();
 builder.Services.AddScoped<CatalogoRepositorio>();
+builder.Services.AddScoped<CalificacionRepositorio>();
+builder.Services.AddHostedService<VencimientoTarea>();
 builder.Services.AddSingleton<HashServicio>();
 builder.Services.AddSingleton(jwt);
 

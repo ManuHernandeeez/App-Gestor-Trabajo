@@ -324,3 +324,128 @@ Authorization: Bearer {{loginTrabajador2.response.body.$.token}}
 
 PUT {{url}}/api/propuestas/{{propuesta1.response.body.$.id}}/retirar
 Authorization: Bearer {{loginTrabajador.response.body.$.token}}
+
+### ----------------------------------------------------------------------------
+### Seguimiento: contacto, estados, calificaciones y reputación. Sigue de la solicitud asignada de arriba.
+### ----------------------------------------------------------------------------
+
+### El cliente pide el contacto del trabajador asignado. Espera 200 con rol, nombre, telefono y direccionExacta
+
+GET {{url}}/api/solicitudes/{{publicar.response.body.$.id}}/contacto
+Authorization: Bearer {{loginCliente.response.body.$.token}}
+
+### El trabajador asignado pide el contacto del cliente. Espera 200
+
+GET {{url}}/api/solicitudes/{{publicar.response.body.$.id}}/contacto
+Authorization: Bearer {{loginTrabajador.response.body.$.token}}
+
+### El segundo trabajador no es parte del trabajo. Espera 403 GT003
+
+GET {{url}}/api/solicitudes/{{publicar.response.body.$.id}}/contacto
+Authorization: Bearer {{loginTrabajador2.response.body.$.token}}
+
+### Finalizar antes de que esté en proceso. Espera 409 GT001
+
+PUT {{url}}/api/solicitudes/{{publicar.response.body.$.id}}/finalizar
+Authorization: Bearer {{loginCliente.response.body.$.token}}
+
+### Un trabajador que no es el asignado no puede marcar en proceso. Espera 403 GT003
+
+PUT {{url}}/api/trabajos/{{publicar.response.body.$.id}}/en-proceso
+Authorization: Bearer {{loginTrabajador2.response.body.$.token}}
+
+### El trabajador asignado marca en proceso. Espera 204
+
+PUT {{url}}/api/trabajos/{{publicar.response.body.$.id}}/en-proceso
+Authorization: Bearer {{loginTrabajador.response.body.$.token}}
+
+### Calificar antes de finalizar. Espera 409 GT001
+
+POST {{url}}/api/solicitudes/{{publicar.response.body.$.id}}/calificaciones
+Authorization: Bearer {{loginCliente.response.body.$.token}}
+Content-Type: application/json
+
+{ "estrellas": 5, "comentario": "Muy puntual (texto de ejemplo)" }
+
+### El trabajador no puede confirmar que terminó. Espera 403 GT003
+
+PUT {{url}}/api/solicitudes/{{publicar.response.body.$.id}}/finalizar
+Authorization: Bearer {{loginTrabajador.response.body.$.token}}
+
+### El cliente confirma que terminó. Espera 204
+
+PUT {{url}}/api/solicitudes/{{publicar.response.body.$.id}}/finalizar
+Authorization: Bearer {{loginCliente.response.body.$.token}}
+
+### Calificar sin comentario. Espera 409 GT001 (el comentario es obligatorio)
+
+POST {{url}}/api/solicitudes/{{publicar.response.body.$.id}}/calificaciones
+Authorization: Bearer {{loginCliente.response.body.$.token}}
+Content-Type: application/json
+
+{ "estrellas": 5, "comentario": "" }
+
+### El cliente califica al trabajador. Espera 201 con { id }
+
+POST {{url}}/api/solicitudes/{{publicar.response.body.$.id}}/calificaciones
+Authorization: Bearer {{loginCliente.response.body.$.token}}
+Content-Type: application/json
+
+{ "estrellas": 5, "comentario": "Muy puntual (texto de ejemplo)" }
+
+### Calificar otra vez. Espera 409 GT001
+
+POST {{url}}/api/solicitudes/{{publicar.response.body.$.id}}/calificaciones
+Authorization: Bearer {{loginCliente.response.body.$.token}}
+Content-Type: application/json
+
+{ "estrellas": 4, "comentario": "Otra vez (texto de ejemplo)" }
+
+### El trabajador califica al cliente. Espera 201
+
+POST {{url}}/api/solicitudes/{{publicar.response.body.$.id}}/calificaciones
+Authorization: Bearer {{loginTrabajador.response.body.$.token}}
+Content-Type: application/json
+
+{ "estrellas": 4, "comentario": "Buen cliente (texto de ejemplo)" }
+
+### Reputación del trabajador: promedio y últimas calificaciones, con nombres abreviados
+
+GET {{url}}/api/usuarios/{{loginTrabajador.response.body.$.usuarioId}}/reputacion
+Authorization: Bearer {{loginCliente.response.body.$.token}}
+
+### Reputación de un usuario que no existe. Espera 404 GT002
+
+GET {{url}}/api/usuarios/999999/reputacion
+Authorization: Bearer {{loginCliente.response.body.$.token}}
+
+### Cancelar: se publica otra solicitud y el cliente la cancela. Espera 201 con { id }
+
+# @name publicar2
+POST {{url}}/api/solicitudes
+Authorization: Bearer {{loginCliente.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "oficioId": {{oficioId}},
+  "coloniaId": {{coloniaId}},
+  "titulo": "Reparar un interruptor",
+  "descripcion": "Texto de ejemplo para cancelar",
+  "presupuesto": 15.00,
+  "direccionExacta": "Dirección inventada, casa 9"
+}
+
+### Un trabajador no puede cancelar solicitudes. Espera 403 GT003
+
+PUT {{url}}/api/solicitudes/{{publicar2.response.body.$.id}}/cancelar
+Authorization: Bearer {{loginTrabajador.response.body.$.token}}
+
+### El cliente cancela la solicitud. Espera 204
+
+PUT {{url}}/api/solicitudes/{{publicar2.response.body.$.id}}/cancelar
+Authorization: Bearer {{loginCliente.response.body.$.token}}
+
+### Cancelar otra vez. Espera 409 GT001
+
+PUT {{url}}/api/solicitudes/{{publicar2.response.body.$.id}}/cancelar
+Authorization: Bearer {{loginCliente.response.body.$.token}}

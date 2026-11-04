@@ -88,6 +88,51 @@ public class SolicitudRepositorio
             miPropuesta);
     }
 
+    public Task CancelarAsync(int clienteId, int solicitudId)
+    {
+        return EjecutarAsync(clienteId, "SELECT fn_cancelar_solicitud(@usuario, @solicitud)", solicitudId);
+    }
+
+    public Task FinalizarAsync(int clienteId, int solicitudId)
+    {
+        return EjecutarAsync(clienteId, "SELECT fn_finalizar_solicitud(@usuario, @solicitud)", solicitudId);
+    }
+
+    public Task MarcarEnProcesoAsync(int trabajadorId, int solicitudId)
+    {
+        return EjecutarAsync(trabajadorId, "SELECT fn_marcar_en_proceso(@usuario, @solicitud)", solicitudId);
+    }
+
+    // fn_contacto_trabajo lanza GT003 si quien pregunta no es una de las dos partes o el trabajo no está asignado.
+    public async Task<ContactoRespuesta?> ObtenerContactoAsync(int usuarioId, int solicitudId)
+    {
+        await using var comando = _bd.ComandoLectura(
+            "SELECT rol, nombre, telefono, direccion_exacta FROM fn_contacto_trabajo(@usuario, @solicitud)");
+        comando.Parameters.AddWithValue("usuario", usuarioId);
+        comando.Parameters.AddWithValue("solicitud", solicitudId);
+        await using var lector = await comando.ExecuteReaderAsync();
+        if (!await lector.ReadAsync())
+        {
+            return null;
+        }
+        return new ContactoRespuesta(
+            lector.GetString(0), lector.GetString(1),
+            lector.IsDBNull(2) ? null : lector.GetString(2),
+            lector.IsDBNull(3) ? null : lector.GetString(3));
+    }
+
+    // Llama a una función fn_... que recibe (usuario, solicitud) dentro de una transacción.
+    private Task EjecutarAsync(int usuarioId, string sql, int solicitudId)
+    {
+        return _bd.EnTransaccionAsync(usuarioId, async conexion =>
+        {
+            await using var comando = new NpgsqlCommand(sql, conexion);
+            comando.Parameters.AddWithValue("usuario", usuarioId);
+            comando.Parameters.AddWithValue("solicitud", solicitudId);
+            await comando.ExecuteScalarAsync();
+        });
+    }
+
     private static object Valor(object? valor)
     {
         return valor ?? DBNull.Value;

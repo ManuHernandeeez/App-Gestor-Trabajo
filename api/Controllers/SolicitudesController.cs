@@ -59,4 +59,43 @@ public class SolicitudesController : ControllerBase
     {
         return _propuestas.ListarDeSolicitudAsync(User.ObtenerUsuarioId(), id);
     }
+
+    [HttpPut("{id:int}/cancelar")]
+    [Authorize(Roles = "cliente")]
+    public async Task<IActionResult> Cancelar(int id)
+    {
+        await _solicitudes.CancelarAsync(User.ObtenerUsuarioId(), id);
+        return NoContent();
+    }
+
+    // El cliente confirma que el trabajo terminó
+    [HttpPut("{id:int}/finalizar")]
+    [Authorize(Roles = "cliente")]
+    public async Task<IActionResult> Finalizar(int id)
+    {
+        await _solicitudes.FinalizarAsync(User.ObtenerUsuarioId(), id);
+        return NoContent();
+    }
+
+    // El trabajador asignado avisa que empezó
+    [HttpPut("~/api/trabajos/{solicitudId:int}/en-proceso")]
+    [Authorize(Roles = "trabajador")]
+    public async Task<IActionResult> MarcarEnProceso(int solicitudId)
+    {
+        await _solicitudes.MarcarEnProcesoAsync(User.ObtenerUsuarioId(), solicitudId);
+        return NoContent();
+    }
+
+    // Teléfono y dirección: solo las dos partes de un trabajo asignado (lo verifica la base)
+    [HttpGet("{id:int}/contacto")]
+    [Authorize(Roles = "cliente,trabajador")]
+    public async Task<ActionResult<ContactoRespuesta>> Contacto(int id)
+    {
+        var contacto = await _solicitudes.ObtenerContactoAsync(User.ObtenerUsuarioId(), id);
+        if (contacto == null)
+        {
+            return NotFound(new ErrorRespuesta("GT002", "No se encontró el contacto de este trabajo"));
+        }
+        return contacto;
+    }
 }
