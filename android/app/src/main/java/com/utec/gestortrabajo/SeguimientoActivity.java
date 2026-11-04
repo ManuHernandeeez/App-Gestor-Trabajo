@@ -180,7 +180,8 @@ public class SeguimientoActivity extends AppCompatActivity {
             case "en_proceso":
                 return getString(esCliente ? R.string.indicacion_proceso_cliente : R.string.indicacion_proceso_trabajador);
             case "finalizada":
-                return getString(R.string.indicacion_finalizada, nombreOtraParte);
+                return getString(detalle.yaCalifique ? R.string.indicacion_calificada : R.string.indicacion_finalizada,
+                        nombreOtraParte);
             case "cancelada":
                 return getString(R.string.indicacion_cancelada);
             case "vencida":
@@ -194,7 +195,7 @@ public class SeguimientoActivity extends AppCompatActivity {
         String estado = detalle.estado;
         btnEnProceso.setVisibility(!esCliente && estado.equals("asignada") ? View.VISIBLE : View.GONE);
         btnFinalizar.setVisibility(esCliente && estado.equals("en_proceso") ? View.VISIBLE : View.GONE);
-        btnCalificar.setVisibility(estado.equals("finalizada") ? View.VISIBLE : View.GONE);
+        btnCalificar.setVisibility(estado.equals("finalizada") && !detalle.yaCalifique ? View.VISIBLE : View.GONE);
         btnCalificar.setText(getString(R.string.boton_calificar, nombreOtraParte));
     }
 

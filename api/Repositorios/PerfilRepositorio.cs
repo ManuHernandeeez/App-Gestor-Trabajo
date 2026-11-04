@@ -3,7 +3,7 @@ using Npgsql;
 
 namespace GestorTrabajoApi.Repositorios;
 
-// Perfil propio: lectura y edición de datos, oficios y colonias. La foto se agrega después.
+// Perfil propio: lectura y edición de datos, foto, oficios y colonias.
 public class PerfilRepositorio
 {
     private readonly BaseDatos _bd;
@@ -26,6 +26,19 @@ public class PerfilRepositorio
             comando.Parameters.AddWithValue("municipio", Valor(datos.MunicipioId));
             comando.Parameters.AddWithValue("colonia", Valor(datos.ColoniaId));
             await comando.ExecuteNonQueryAsync();
+        });
+    }
+
+    // Devuelve el nombre de la foto anterior (null si no tenía) para que quien llama la borre del disco
+    public Task<string?> ActualizarFotoAsync(int usuarioId, string nombreArchivo)
+    {
+        return _bd.EnTransaccionAsync(usuarioId, async conexion =>
+        {
+            await using var comando = new NpgsqlCommand("SELECT fn_actualizar_foto(@usuario, @foto)", conexion);
+            comando.Parameters.AddWithValue("usuario", usuarioId);
+            comando.Parameters.AddWithValue("foto", nombreArchivo);
+            var anterior = await comando.ExecuteScalarAsync();
+            return anterior is string nombre ? nombre : null;
         });
     }
 

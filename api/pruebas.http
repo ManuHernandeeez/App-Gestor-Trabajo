@@ -449,3 +449,34 @@ Authorization: Bearer {{loginCliente.response.body.$.token}}
 
 PUT {{url}}/api/solicitudes/{{publicar2.response.body.$.id}}/cancelar
 Authorization: Bearer {{loginCliente.response.body.$.token}}
+
+### ----------------------------------------------------------------------------
+### Foto de perfil
+### ----------------------------------------------------------------------------
+
+### Sube la foto de perfil (multipart, campo "foto", JPG o PNG de hasta 2 MB). Cambia la ruta por una imagen tuya.
+### Espera 200 con { fotoUrl }; la imagen se ve en {{url}}/ y luego la ruta fotoUrl
+
+POST {{url}}/api/perfil/foto
+Authorization: Bearer {{loginCliente.response.body.$.token}}
+Content-Type: multipart/form-data; boundary=limite
+
+--limite
+Content-Disposition: form-data; name="foto"; filename="foto.png"
+Content-Type: image/png
+
+< ./ejemplo.png
+--limite--
+
+### Un archivo que no es imagen. Espera 400 SOLICITUD_INVALIDA
+
+POST {{url}}/api/perfil/foto
+Authorization: Bearer {{loginCliente.response.body.$.token}}
+Content-Type: multipart/form-data; boundary=limite
+
+--limite
+Content-Disposition: form-data; name="foto"; filename="foto.jpg"
+Content-Type: image/jpeg
+
+esto no es una imagen
+--limite--

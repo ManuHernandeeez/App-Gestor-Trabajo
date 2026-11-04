@@ -5,6 +5,7 @@ using GestorTrabajoApi.Servicios;
 using GestorTrabajoApi.Tareas;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.OpenApi;
 using Npgsql;
 
@@ -25,6 +26,7 @@ builder.Services.AddScoped<CatalogoRepositorio>();
 builder.Services.AddScoped<CalificacionRepositorio>();
 builder.Services.AddHostedService<VencimientoTarea>();
 builder.Services.AddSingleton<HashServicio>();
+builder.Services.AddSingleton<FotoServicio>();
 builder.Services.AddSingleton(jwt);
 
 builder.Services.AddControllers(mvc =>
@@ -86,6 +88,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// Las fotos de perfil se sirven como archivos estáticos; los nombres son GUID y no se pueden adivinar
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(app.Services.GetRequiredService<FotoServicio>().Carpeta),
+    RequestPath = "/fotos"
+});
 
 app.UseAuthentication();
 app.UseAuthorization();

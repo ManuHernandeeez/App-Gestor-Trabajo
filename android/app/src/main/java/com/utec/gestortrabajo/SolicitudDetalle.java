@@ -23,6 +23,8 @@ public class SolicitudDetalle {
     public final String trabajadorNombre;
     // Cantidad de propuestas, solo para el dueño; 0 para el trabajador
     public final int propuestas;
+    // true si quien mira ya calificó este trabajo
+    public final boolean yaCalifique;
     public final String miPropuestaEstado;
     public final double miPropuestaPrecio;
 
@@ -38,6 +40,7 @@ public class SolicitudDetalle {
         clienteNombre = json.getString("clienteNombre");
         trabajadorNombre = json.isNull("trabajadorNombre") ? null : json.getString("trabajadorNombre");
         propuestas = json.isNull("propuestas") ? 0 : json.getInt("propuestas");
+        yaCalifique = json.optBoolean("yaCalifique", false);
         if (json.isNull("miPropuesta")) {
             miPropuestaEstado = null;
             miPropuestaPrecio = 0;

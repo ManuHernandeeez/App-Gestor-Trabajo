@@ -59,8 +59,27 @@ public class SolicitudRepositorio
         return solicitudes;
     }
 
-    // Los permisos (dueño, zona, propuesta o asignado) los revisa fn_detalle_solicitud.
     public async Task<SolicitudDetalleRespuesta?> ObtenerDetalleAsync(int usuarioId, int solicitudId)
+    {
+        var detalle = await LeerDetalleAsync(usuarioId, solicitudId);
+        if (detalle == null)
+        {
+            return null;
+        }
+        return detalle with { YaCalifique = await YaCalificoAsync(usuarioId, solicitudId) };
+    }
+
+    private async Task<bool> YaCalificoAsync(int usuarioId, int solicitudId)
+    {
+        await using var comando = _bd.ComandoLectura(
+            "SELECT EXISTS (SELECT 1 FROM calificaciones WHERE solicitud_id = @solicitud AND calificador_id = @usuario)");
+        comando.Parameters.AddWithValue("solicitud", solicitudId);
+        comando.Parameters.AddWithValue("usuario", usuarioId);
+        return (bool)(await comando.ExecuteScalarAsync())!;
+    }
+
+    // Los permisos (dueño, zona, propuesta o asignado) los revisa fn_detalle_solicitud.
+    private async Task<SolicitudDetalleRespuesta?> LeerDetalleAsync(int usuarioId, int solicitudId)
     {
         await using var comando = _bd.ComandoLectura(
             "SELECT id, titulo, descripcion, oficio, zona, presupuesto, estado, fecha_publicacion, cliente_id, " +

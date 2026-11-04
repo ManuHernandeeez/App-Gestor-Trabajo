@@ -138,6 +138,7 @@
     <string name="indicacion_proceso_cliente">El trabajo está en proceso. Confirma cuando el trabajador termine.</string>
     <string name="indicacion_proceso_trabajador">Trabajo en proceso. El cliente confirmará cuando termines.</string>
     <string name="indicacion_finalizada">Trabajo finalizado. Califica a %1$s.</string>
+    <string name="indicacion_calificada">Trabajo finalizado. Ya calificaste a %1$s.</string>
     <string name="indicacion_cancelada">Esta solicitud fue cancelada.</string>
     <string name="indicacion_vencida">Esta solicitud venció sin asignarse.</string>
     <string name="contacto_cliente">Contacto del cliente</string>
