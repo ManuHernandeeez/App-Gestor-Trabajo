@@ -43,6 +43,12 @@ android/.idea/workspace.xml
 android/.idea/navEditor.xml
 android/.idea/assetWizardSettings.xml
 
+# Android Studio abierto desde la raíz del repositorio
+/.idea/
+
+# Salida de las pruebas de la base de datos
+bd/resultados.txt
+
 # Documentación privada (no se sube a GitHub)
 privado/
 /CLAUDE.md
