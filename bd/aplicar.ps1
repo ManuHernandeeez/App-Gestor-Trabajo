@@ -2,12 +2,14 @@
 # Desde la raíz del repositorio:
 #   .\bd\aplicar.ps1               crea la base si falta y aplica 01 a 05
 #   .\bd\aplicar.ps1 -Pruebas      además corre 06_pruebas.sql
+#   .\bd\aplicar.ps1 -DatosPrueba  además carga las cuentas de ejemplo de 07_usuarios_prueba.sql. Solo desarrollo
 #   .\bd\aplicar.ps1 -Reiniciar    borra todo (99_reiniciar.sql) antes de aplicar. Solo desarrollo
 param(
     [string]$Servidor = 'localhost',
     [int]$Puerto = 5432,
     [string]$Usuario = 'postgres',
     [switch]$Pruebas,
+    [switch]$DatosPrueba,
     [switch]$Reiniciar
 )
 
@@ -19,9 +21,14 @@ $env:PGCLIENTENCODING = 'UTF8'
 function Buscar-Psql {
     $comando = Get-Command psql -ErrorAction SilentlyContinue
     if ($comando) { return $comando.Source }
-    $ruta = 'C:\Program Files\PostgreSQL\16\bin\psql.exe'
-    if (Test-Path $ruta) { return $ruta }
-    throw 'No se encontró psql. Instala PostgreSQL 16 o agrega su carpeta bin al PATH.'
+    # Sin PATH, usa la versión instalada más reciente (carpetas 16, 17, 18...)
+    $versiones = Get-ChildItem 'C:\Program Files\PostgreSQL' -Directory -ErrorAction SilentlyContinue |
+        Where-Object { $_.Name -match '^\d+$' } | Sort-Object { [int]$_.Name } -Descending
+    foreach ($version in $versiones) {
+        $ruta = Join-Path $version.FullName 'bin\psql.exe'
+        if (Test-Path $ruta) { return $ruta }
+    }
+    throw 'No se encontró psql. Instala PostgreSQL o agrega su carpeta bin al PATH.'
 }
 
 function Psql-Archivo($archivo) {
@@ -58,6 +65,11 @@ try {
     if ($Pruebas) {
         Write-Host 'Corriendo 06_pruebas.sql'
         Psql-Archivo "$PSScriptRoot\06_pruebas.sql"
+    }
+
+    if ($DatosPrueba) {
+        Write-Host 'Cargando 07_usuarios_prueba.sql'
+        Psql-Archivo "$PSScriptRoot\07_usuarios_prueba.sql"
     }
 
     $sinClave = & $psql -h $Servidor -p $Puerto -U $Usuario -d $base -tA -c "SELECT rolpassword IS NULL FROM pg_authid WHERE rolname = 'gtr_api'"
