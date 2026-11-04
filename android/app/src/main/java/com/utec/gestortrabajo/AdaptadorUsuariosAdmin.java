@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 // Filas de la búsqueda de usuarios: nombre, rol, estado y el botón Suspender o Reactivar.
 // Un administrador no se puede suspender, así que su fila no trae botón.
@@ -53,7 +54,7 @@ public class AdaptadorUsuariosAdmin extends BaseAdapter {
         }
         final UsuarioAdmin usuario = usuarios.get(posicion);
 
-        ((TextView) vista.findViewById(R.id.txtInicial)).setText(usuario.nombre.substring(0, 1).toUpperCase());
+        ((TextView) vista.findViewById(R.id.txtInicial)).setText(usuario.nombre.substring(0, 1).toUpperCase(Locale.getDefault()));
         ((TextView) vista.findViewById(R.id.txtNombre)).setText(usuario.nombre);
         ((TextView) vista.findViewById(R.id.txtRol)).setText(textoRol(usuario.rol));
 

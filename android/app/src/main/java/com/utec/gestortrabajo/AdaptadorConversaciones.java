@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class AdaptadorConversaciones extends BaseAdapter {
 
@@ -44,7 +45,7 @@ public class AdaptadorConversaciones extends BaseAdapter {
         Conversacion conversacion = conversaciones.get(posicion);
 
         String nombre = conversacion.otraParteNombre;
-        ((TextView) vista.findViewById(R.id.txtInicial)).setText(nombre.substring(0, 1).toUpperCase());
+        ((TextView) vista.findViewById(R.id.txtInicial)).setText(nombre.substring(0, 1).toUpperCase(Locale.getDefault()));
         ((TextView) vista.findViewById(R.id.txtNombre)).setText(nombre);
         ((TextView) vista.findViewById(R.id.txtTrabajo)).setText(conversacion.titulo);
         ((TextView) vista.findViewById(R.id.txtUltimo)).setText(conversacion.ultimoMensaje == null

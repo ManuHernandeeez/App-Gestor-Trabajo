@@ -120,6 +120,6 @@
             android:contentDescription="@string/enviar_mensaje"
             android:onClick="enviar"
             android:src="@drawable/ic_enviar"
-            android:tint="@color/principal" />
+            app:tint="@color/principal" />
     </LinearLayout>
 </LinearLayout>
