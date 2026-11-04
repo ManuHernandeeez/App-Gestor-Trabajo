@@ -141,15 +141,18 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     // Cliente va a sus solicitudes y trabajador a los trabajos de su zona. Devuelve false si no hay pantalla para el rol.
+    // La pantalla recibe el extra "sincronizar" para pedir los mensajes y avisos nuevos al abrir la app.
     private boolean abrirMenu(String rol) {
+        Intent intent;
         if (rol.equals("cliente")) {
-            startActivity(new Intent(this, MisSolicitudesActivity.class));
-            return true;
+            intent = new Intent(this, MisSolicitudesActivity.class);
+        } else if (rol.equals("trabajador")) {
+            intent = new Intent(this, TrabajosZonaActivity.class);
+        } else {
+            return false;
         }
-        if (rol.equals("trabajador")) {
-            startActivity(new Intent(this, TrabajosZonaActivity.class));
-            return true;
-        }
-        return false;
+        intent.putExtra("sincronizar", true);
+        startActivity(intent);
+        return true;
     }
 }

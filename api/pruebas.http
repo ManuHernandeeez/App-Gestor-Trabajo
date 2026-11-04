@@ -480,3 +480,86 @@ Content-Type: image/jpeg
 
 esto no es una imagen
 --limite--
+
+### ----------------------------------------------------------------------------
+### Mensajes, conversaciones, sincronización y avisos. Sigue del trabajo asignado de arriba.
+### ----------------------------------------------------------------------------
+
+### El cliente escribe al trabajador asignado. Espera 201 con { id }
+
+POST {{url}}/api/solicitudes/{{publicar.response.body.$.id}}/mensajes
+Authorization: Bearer {{loginCliente.response.body.$.token}}
+Content-Type: application/json
+
+{ "texto": "Hola, ¿a qué hora llegas? (texto de ejemplo)" }
+
+### El trabajador responde. Espera 201
+
+POST {{url}}/api/solicitudes/{{publicar.response.body.$.id}}/mensajes
+Authorization: Bearer {{loginTrabajador.response.body.$.token}}
+Content-Type: application/json
+
+{ "texto": "Llego a las 3 pm (texto de ejemplo)" }
+
+### Mensaje vacío. Espera 409 GT001
+
+POST {{url}}/api/solicitudes/{{publicar.response.body.$.id}}/mensajes
+Authorization: Bearer {{loginCliente.response.body.$.token}}
+Content-Type: application/json
+
+{ "texto": "   " }
+
+### Un trabajador que no es el asignado no puede escribir. Espera 403 GT003
+
+POST {{url}}/api/solicitudes/{{publicar.response.body.$.id}}/mensajes
+Authorization: Bearer {{loginTrabajador2.response.body.$.token}}
+Content-Type: application/json
+
+{ "texto": "Hola" }
+
+### Mensajes del trabajo, con esMio según quien pregunta. Con ?desde=2026-11-03T10:00:00%2B00:00 trae solo los posteriores
+
+GET {{url}}/api/solicitudes/{{publicar.response.body.$.id}}/mensajes
+Authorization: Bearer {{loginCliente.response.body.$.token}}
+
+### El trabajador no asignado no puede leerlos. Espera 403 GT003
+
+GET {{url}}/api/solicitudes/{{publicar.response.body.$.id}}/mensajes
+Authorization: Bearer {{loginTrabajador2.response.body.$.token}}
+
+### Conversaciones del trabajador: último mensaje y cuántos avisos de mensaje tiene sin leer
+
+GET {{url}}/api/conversaciones
+Authorization: Bearer {{loginTrabajador.response.body.$.token}}
+
+### Sincronización al abrir la app (primera carga, sin desde). Responde { ahora, mensajes, avisos }
+### Guarda "ahora" y mándalo como ?desde= la próxima vez (el + se escribe %2B)
+
+GET {{url}}/api/sincronizacion
+Authorization: Bearer {{loginTrabajador.response.body.$.token}}
+
+### Un "desde" que no es una fecha. Espera 400 SOLICITUD_INVALIDA
+
+GET {{url}}/api/sincronizacion?desde=ayer
+Authorization: Bearer {{loginTrabajador.response.body.$.token}}
+
+### Marca como leídos los avisos de una solicitud. Espera 200 con { marcados }
+
+PUT {{url}}/api/avisos/leidos
+Authorization: Bearer {{loginTrabajador.response.body.$.token}}
+Content-Type: application/json
+
+{ "solicitudId": {{publicar.response.body.$.id}} }
+
+### Marca como leídos solo los avisos de la lista (una lista vacía no marca ninguno)
+
+PUT {{url}}/api/avisos/leidos
+Authorization: Bearer {{loginTrabajador.response.body.$.token}}
+Content-Type: application/json
+
+{ "ids": [1, 2, 3] }
+
+### Sin cuerpo marca todos los avisos del usuario
+
+PUT {{url}}/api/avisos/leidos
+Authorization: Bearer {{loginTrabajador.response.body.$.token}}

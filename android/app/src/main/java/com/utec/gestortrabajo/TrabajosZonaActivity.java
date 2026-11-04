@@ -52,6 +52,7 @@ public class TrabajosZonaActivity extends AppCompatActivity {
 
         filtroOficio = findViewById(R.id.filtroOficio);
         cargarOficios();
+        Sincronizacion.alAbrirApp(this);
     }
 
     // Al volver del detalle se recarga la lista, por si el trabajador envió una propuesta

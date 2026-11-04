@@ -59,6 +59,7 @@ public class MisSolicitudesActivity extends AppCompatActivity {
             }
         });
         cargar();
+        Sincronizacion.alAbrirApp(this);
     }
 
     // Al volver de otra pantalla se recarga: pudo publicarse una solicitud o aceptarse una propuesta

@@ -157,6 +157,16 @@
                 </LinearLayout>
 
                 <Button
+                    android:id="@+id/btnMensajes"
+                    style="@style/BotonContorno"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/espacio_medio"
+                    android:onClick="abrirMensajes"
+                    android:text="@string/boton_mensajes"
+                    android:visibility="gone" />
+
+                <Button
                     android:id="@+id/btnEnProceso"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -9,6 +9,10 @@
         android:icon="@drawable/ic_propuestas"
         android:title="@string/barra_mis_propuestas" />
     <item
+        android:id="@+id/btnBarraMensajes"
+        android:icon="@drawable/ic_mensajes"
+        android:title="@string/barra_mensajes" />
+    <item
         android:id="@+id/btnBarraPerfil"
         android:icon="@drawable/ic_persona"
         android:title="@string/barra_perfil" />

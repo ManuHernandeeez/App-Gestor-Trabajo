@@ -36,6 +36,7 @@ public class SeguimientoActivity extends AppCompatActivity {
     private TextView txtContactoDireccion;
     private View vistaDetalle;
     private View vistaContacto;
+    private Button btnMensajes;
     private Button btnEnProceso;
     private Button btnFinalizar;
     private Button btnCalificar;
@@ -59,6 +60,7 @@ public class SeguimientoActivity extends AppCompatActivity {
         txtContactoDireccion = findViewById(R.id.txtContactoDireccion);
         vistaDetalle = findViewById(R.id.vistaDetalle);
         vistaContacto = findViewById(R.id.vistaContacto);
+        btnMensajes = findViewById(R.id.btnMensajes);
         btnEnProceso = findViewById(R.id.btnEnProceso);
         btnFinalizar = findViewById(R.id.btnFinalizar);
         btnCalificar = findViewById(R.id.btnCalificar);
@@ -89,6 +91,16 @@ public class SeguimientoActivity extends AppCompatActivity {
     // Botón Actualizar
     public void actualizar(View vista) {
         cargar();
+    }
+
+    // Botón Mensajes
+    public void abrirMensajes(View vista) {
+        Intent intent = new Intent(this, ConversacionActivity.class);
+        intent.putExtra("solicitudId", solicitudId);
+        intent.putExtra("nombre", nombreOtraParte);
+        intent.putExtra("titulo", detalle.titulo);
+        intent.putExtra("estado", detalle.estado);
+        startActivity(intent);
     }
 
     // Botón Marcar en proceso (trabajador)
@@ -193,6 +205,7 @@ public class SeguimientoActivity extends AppCompatActivity {
 
     private void mostrarAcciones() {
         String estado = detalle.estado;
+        btnMensajes.setVisibility(hayContacto() ? View.VISIBLE : View.GONE);
         btnEnProceso.setVisibility(!esCliente && estado.equals("asignada") ? View.VISIBLE : View.GONE);
         btnFinalizar.setVisibility(esCliente && estado.equals("en_proceso") ? View.VISIBLE : View.GONE);
         btnCalificar.setVisibility(estado.equals("finalizada") && !detalle.yaCalifique ? View.VISIBLE : View.GONE);

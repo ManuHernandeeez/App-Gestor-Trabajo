@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/raiz"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/superficie"
+    android:orientation="vertical">
+
+    <LinearLayout style="@style/BarraSuperior">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/espacio_pequeno"
+            android:paddingBottom="@dimen/espacio_pequeno">
+
+            <TextView
+                android:id="@+id/txtTitulo"
+                style="@style/TituloBarra"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/titulo_mensajes" />
+
+            <TextView
+                android:id="@+id/txtNombre"
+                style="@style/SubtituloBarra"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btnActualizar"
+            style="@style/BotonIcono"
+            android:contentDescription="@string/actualizar"
+            android:onClick="actualizar"
+            android:src="@drawable/ic_refrescar" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/fondo">
+
+        <ListView
+            android:id="@+id/listaConversaciones"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="@dimen/espacio_medio"
+            android:padding="@dimen/espacio_pantalla" />
+
+        <TextView
+            android:id="@+id/txtVacio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:padding="@dimen/espacio_pantalla"
+            android:text="@string/cargando"
+            android:textColor="@color/gris"
+            android:textSize="@dimen/texto_subtitulo" />
+    </FrameLayout>
+
+    <!-- Pantalla compartida: Barra.preparar deja visible solo la barra del rol -->
+    <include layout="@layout/barra_cliente" />
+
+    <include layout="@layout/barra_trabajador" />
+</LinearLayout>

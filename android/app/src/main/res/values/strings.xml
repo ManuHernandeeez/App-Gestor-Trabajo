@@ -102,6 +102,7 @@
     <string name="barra_trabajos">Trabajos</string>
     <string name="barra_mis_propuestas">Mis propuestas</string>
     <string name="barra_perfil">Perfil</string>
+    <string name="barra_mensajes">Mensajes</string>
 
     <!-- Propuestas de una solicitud (cliente) -->
     <string name="titulo_propuestas">Propuestas</string>
@@ -154,6 +155,25 @@
     <string name="terminado_titulo">¿Confirmar que terminó?</string>
     <string name="terminado_mensaje">Confirma solo si el trabajo ya quedó hecho. Después podrás calificar al trabajador.</string>
     <string name="terminado_ok">Trabajo finalizado</string>
+
+    <!-- Mensajes y conversación (cliente y trabajador) -->
+    <string name="titulo_mensajes">Mensajes</string>
+    <string name="vacio_conversaciones">Todavía no tienes conversaciones. Aparecen cuando un trabajo queda asignado.</string>
+    <string name="sin_mensajes_aun">Sin mensajes todavía</string>
+    <string name="sin_mensajes">Todavía no hay mensajes. Escribe el primero.</string>
+    <string name="hint_mensaje_chat">Escribe un mensaje</string>
+    <string name="enviar_mensaje">Enviar mensaje</string>
+    <string name="conversacion_cerrada">Este trabajo ya no admite mensajes nuevos</string>
+    <string name="boton_mensajes">Mensajes</string>
+
+    <!-- Novedades al abrir la app -->
+    <string name="sync_titulo">Novedades</string>
+    <string name="sync_mensaje_uno">Tienes 1 mensaje nuevo. Búscalo en la pestaña Mensajes.</string>
+    <string name="sync_mensajes_varios">Tienes %1$d mensajes nuevos. Búscalos en la pestaña Mensajes.</string>
+    <string name="sync_aviso_uno">1 aviso:</string>
+    <string name="sync_avisos_varios">%1$d avisos:</string>
+    <string name="sync_y_mas">y %1$d más</string>
+    <string name="sync_entendido">Entendido</string>
 
     <!-- Calificar (cliente y trabajador) -->
     <string name="titulo_calificar">Calificar</string>

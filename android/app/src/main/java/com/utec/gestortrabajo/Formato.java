@@ -3,6 +3,11 @@ package com.utec.gestortrabajo;
 import android.content.Context;
 
 import java.text.Normalizer;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 // Textos que se repiten en varias pantallas.
@@ -44,6 +49,13 @@ public class Formato {
     public static String sinTildes(String texto) {
         String separado = Normalizer.normalize(texto, Normalizer.Form.NFD);
         return separado.replaceAll("\\p{M}", "").toLowerCase(Locale.ROOT);
+    }
+
+    // Fecha ISO 8601 de la API en hora local: "15:30" si es de hoy y "03/11 15:30" si no
+    public static String fechaHora(String iso) {
+        ZonedDateTime fecha = OffsetDateTime.parse(iso).atZoneSameInstant(ZoneId.systemDefault());
+        String patron = fecha.toLocalDate().equals(LocalDate.now()) ? "HH:mm" : "dd/MM HH:mm";
+        return fecha.format(DateTimeFormatter.ofPattern(patron, Locale.US));
     }
 
     public static String hace(Context contexto, int horas) {

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fila de la lista de mensajes: quién es, el trabajo, el último mensaje y cuántos hay sin leer -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/fondo_tarjeta"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="@dimen/espacio_tarjeta">
+
+    <TextView
+        android:id="@+id/txtInicial"
+        android:layout_width="@dimen/avatar"
+        android:layout_height="@dimen/avatar"
+        android:background="@drawable/fondo_avatar"
+        android:gravity="center"
+        android:importantForAccessibility="no"
+        android:textColor="@color/principal"
+        android:textSize="@dimen/texto_titulo"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/espacio_medio"
+        android:layout_marginEnd="@dimen/espacio_pequeno"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txtNombre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/texto"
+            android:textSize="@dimen/texto_subtitulo"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txtTrabajo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/principal"
+            android:textSize="@dimen/texto_pequeno" />
+
+        <TextView
+            android:id="@+id/txtUltimo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/gris"
+            android:textSize="@dimen/texto_normal" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txtFecha"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/gris"
+            android:textSize="@dimen/texto_pequeno" />
+
+        <TextView
+            android:id="@+id/txtNuevos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/espacio_pequeno"
+            android:background="@drawable/fondo_contador"
+            android:minWidth="24dp"
+            android:gravity="center"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/texto_pequeno"
+            android:textStyle="bold" />
+    </LinearLayout>
+</LinearLayout>

@@ -73,6 +73,9 @@ public class Barra {
         if (idPestana == R.id.btnBarraPropuestas) {
             return MisPropuestasActivity.class;
         }
+        if (idPestana == R.id.btnBarraMensajes) {
+            return MensajesActivity.class;
+        }
         if (idPestana == R.id.btnBarraPerfil) {
             return PerfilActivity.class;
         }

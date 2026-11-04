@@ -34,6 +34,10 @@
             android:name=".PerfilActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
+        <activity android:name=".MensajesActivity" />
+        <activity
+            android:name=".ConversacionActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity android:name=".SeguimientoActivity" />
         <activity
             android:name=".CalificarActivity"
