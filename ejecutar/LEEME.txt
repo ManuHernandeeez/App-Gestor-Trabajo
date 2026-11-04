@@ -1,0 +1,131 @@
+GESTOR DE TRABAJO RAPIDO - COMO PROBARLO EN TU PC (Windows 10)
+Equipo 7. App de pruebas: las claves de abajo son de ejemplo y no importa la seguridad.
+
+Son tres partes que trabajan juntas:
+  - La base de datos (PostgreSQL), carpeta bd/
+  - La API (el "back"), carpeta api/
+  - La app Android, carpeta android/
+Los archivos que ejecutas estan todos en esta carpeta (ejecutar/). Se abren con doble clic.
+
+
+=====================================================================
+A. INSTALAR UNA SOLA VEZ (si ya lo tienes, salta al paso B)
+=====================================================================
+
+1. Git y el codigo
+   Instala Git (https://git-scm.com) y descarga el proyecto:
+       git clone <direccion del repositorio>
+   Luego entra a la carpeta GestorTrabajo.
+
+2. PostgreSQL 18 (sirve tambien la 16 o la 17)
+   Descargalo de https://www.postgresql.org/download/windows/ (instalador de EDB).
+   - Deja marcado todo lo que sale por defecto.
+   - Puerto: 5432 (el que viene).
+   - Te pide una contrasena para el usuario "postgres": ESCRIBELA EN UN PAPEL.
+     La vas a necesitar en el paso B1.
+
+3. SDK de .NET 10
+   Descargalo de https://dotnet.microsoft.com/download (boton ".NET 10.0 SDK", NO el "Runtime").
+   Para comprobarlo, abre PowerShell y escribe:  dotnet --list-sdks   (debe salir 10.x)
+
+4. Android Studio
+   Descargalo de https://developer.android.com/studio e instalalo con las opciones por defecto.
+   Ábrelo una vez para que descargue el SDK de Android.
+
+5. Un telefono Android con cable USB (lo mas facil)
+   En el telefono:
+     - Ajustes > Acerca del telefono > toca 7 veces "Numero de compilacion".
+     - Ajustes > Opciones de desarrollador > activa "Depuracion por USB".
+   El emulador de Android Studio tambien sirve, pero en algunas PC no arranca.
+
+
+=====================================================================
+B. LEVANTAR TODO (cada archivo se abre con doble clic en esta carpeta)
+=====================================================================
+
+PASO 1 - Base de datos         archivo: paso1-base-de-datos.bat
+   Te pide la contrasena de "postgres" (la del paso A2). Al escribirla no se ve nada, es normal.
+   Crea la base, las tablas, los departamentos y municipios, y las cuentas de ejemplo.
+   Termina con "Base de datos lista".
+   Se puede repetir cuantas veces quieras sin danar nada.
+
+PASO 2 - API                   archivo: paso2-api.bat
+   Configura la API y la enciende. La primera vez tarda un poco porque descarga paquetes.
+   Cuando aparece "Now listening on: http://0.0.0.0:5000" ya esta lista.
+   DEJA ESA VENTANA ABIERTA mientras pruebas. Para apagar la API: Ctrl+C.
+   Comprobacion rapida: abre http://localhost:5000/swagger en el navegador.
+
+PASO 3 - Telefono              archivo: paso3-telefono.bat
+   Conecta el telefono por USB, acepta el aviso "Permitir depuracion USB" en su pantalla
+   y abre este archivo. Debe decir "Listo".
+   Repitelo cada vez que reconectes el cable o reinicies el telefono.
+
+PASO 4 - La app Android
+   1. Abre Android Studio > Open > elige la carpeta  GestorTrabajo\android
+      (la carpeta "android", no la raiz del proyecto).
+   2. Espera a que termine de sincronizar (barra de abajo). Si pregunta por instalar
+      "Android SDK Platform 37" o algo faltante, acepta e instala.
+   3. Arriba, elige tu telefono en la lista de dispositivos.
+   4. Pulsa el boton verde Run (triangulo).
+   5. En la pantalla de inicio de la app, toca "Acceso de prueba".
+
+Para trabajar otro dia: PostgreSQL ya arranca solo con Windows, asi que normalmente solo
+repites el PASO 2 (API), el PASO 3 (telefono) y el Run de Android Studio.
+
+
+=====================================================================
+C. CUENTAS DE EJEMPLO (todas con la contrasena Clave12345)
+=====================================================================
+
+   Clientes (Mejicanos, Zacamil):  cliente.demo@example.com   cliente2.demo@example.com
+   Trabajadores (Electricidad):    trabajador.demo@example.com   trabajador2.demo@example.com
+   Otros trabajadores:             trabajador3 a trabajador6 .demo@example.com
+   Administrador:                  admin@example.com   /   Admin12345
+
+En la app, el "Acceso de prueba" entra con estas cuentas sin escribir nada.
+
+Recorrido para probar:
+   1. Cliente (Maria): Nueva solicitud, oficio Electricidad, llena los datos y Publicar.
+   2. Trabajador (Luis): Trabajos de mi zona > abre la solicitud > precio y mensaje > Enviar propuesta.
+   3. Trabajador (Pedro): envia otra propuesta a la misma solicitud.
+   4. Cliente (Maria): abre la solicitud, ve las dos propuestas y toca Aceptar en una.
+   5. Trabajador (Pedro): en Mis propuestas ve la suya como Rechazada.
+Usa "Salir" para cambiar de cuenta.
+
+
+=====================================================================
+D. SI ALGO FALLA
+=====================================================================
+
+"No se pudo conectar con el servidor" en la app
+   -> La API no esta encendida (paso 2) o falta el tunel (paso 3). Repite el paso 3.
+   -> No depende de que el telefono y la PC esten en la misma red Wi-Fi: va por el cable USB.
+
+La app entra pero las listas salen vacias o con error
+   -> Falta el paso 1, o la API se encendio antes de terminar el paso 1. Haz el paso 1 y
+      reinicia la API (Ctrl+C en su ventana y vuelve a abrir paso2-api.bat).
+
+Paso 1 dice que no encuentra PostgreSQL o falla la contrasena
+   -> Revisa que PostgreSQL este instalado y que escribas la contrasena de "postgres" del paso A2.
+   -> En PowerShell, "Get-Service postgresql*" debe mostrar "Running".
+
+Paso 2 dice que no encuentra dotnet
+   -> Instala el SDK de .NET 10 (A3) y cierra y abre de nuevo la ventana.
+
+Paso 2 dice que el puerto 5000 esta en uso
+   -> Ya hay una API abierta. Cierra esa ventana (Ctrl+C) y vuelve a intentar.
+
+Android Studio: "jlink executable ... does not exist"
+   -> Abre arreglar-java-android.bat, luego en Android Studio: File > Sync Project with Gradle Files
+      y vuelve a pulsar Run.
+
+El telefono no aparece en el paso 3
+   -> Cambia el modo USB del telefono a "Transferencia de archivos" y acepta el aviso de
+      depuracion. Prueba otro cable o puerto USB.
+
+Quiero dejar la base limpia (borra todo)
+   -> En PowerShell, desde la carpeta GestorTrabajo:
+        .\bd\aplicar.ps1 -Reiniciar -DatosPrueba
+      (te pide la contrasena de postgres). Despues reinicia la API.
+   Si PowerShell dice que no permite ejecutar scripts, corre una vez:
+        Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
