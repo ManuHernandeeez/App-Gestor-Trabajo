@@ -509,7 +509,17 @@ Content-Type: application/json
 
 { "texto": "   " }
 
-### Un trabajador que no es el asignado no puede escribir. Espera 403 GT003
+### El chat es un hilo por cada trabajador que envió propuesta (se abre con la propuesta pendiente, antes de aceptar).
+### El cliente indica con quién habla con "otraParteId" (el id del trabajador); es opcional cuando el trabajo ya
+### tiene trabajador asignado, como en este flujo. El trabajador no necesita indicarlo. Espera 201
+
+POST {{url}}/api/solicitudes/{{publicar.response.body.$.id}}/mensajes
+Authorization: Bearer {{loginCliente.response.body.$.token}}
+Content-Type: application/json
+
+{ "texto": "¿Puedes empezar mañana? (texto de ejemplo)", "otraParteId": {{loginTrabajador.response.body.$.usuarioId}} }
+
+### Un trabajador cuya propuesta fue rechazada ya no puede escribir. Espera 409 GT001
 
 POST {{url}}/api/solicitudes/{{publicar.response.body.$.id}}/mensajes
 Authorization: Bearer {{loginTrabajador2.response.body.$.token}}
@@ -517,17 +527,25 @@ Content-Type: application/json
 
 { "texto": "Hola" }
 
+### Un trabajador sin propuesta en la solicitud no puede escribir. Espera 403 GT003 (usa un token de un trabajador que no haya propuesto)
+
 ### Mensajes del trabajo, con esMio según quien pregunta. Con ?desde=2026-11-03T10:00:00%2B00:00 trae solo los posteriores
 
 GET {{url}}/api/solicitudes/{{publicar.response.body.$.id}}/mensajes
 Authorization: Bearer {{loginCliente.response.body.$.token}}
 
-### El trabajador no asignado no puede leerlos. Espera 403 GT003
+### Mensajes de un hilo concreto: el cliente lo pide con ?otraParteId=<id del trabajador>
+
+GET {{url}}/api/solicitudes/{{publicar.response.body.$.id}}/mensajes?otraParteId={{loginTrabajador.response.body.$.usuarioId}}
+Authorization: Bearer {{loginCliente.response.body.$.token}}
+
+### El trabajador rechazado conserva su hilo para leerlo (vacío). Espera 200 con []
 
 GET {{url}}/api/solicitudes/{{publicar.response.body.$.id}}/mensajes
 Authorization: Bearer {{loginTrabajador2.response.body.$.token}}
 
-### Conversaciones del trabajador: último mensaje y cuántos avisos de mensaje tiene sin leer
+### Conversaciones del trabajador: un hilo por cada trabajo con su otra parte (otraParteId), último mensaje,
+### cuántos avisos de mensaje tiene sin leer y si todavía puede escribir (puedeEscribir)
 
 GET {{url}}/api/conversaciones
 Authorization: Bearer {{loginTrabajador.response.body.$.token}}
@@ -550,6 +568,14 @@ Authorization: Bearer {{loginTrabajador.response.body.$.token}}
 Content-Type: application/json
 
 { "solicitudId": {{publicar.response.body.$.id}} }
+
+### Marca como leídos solo los avisos de mensaje de un hilo (solicitud y la otra persona)
+
+PUT {{url}}/api/avisos/leidos
+Authorization: Bearer {{loginTrabajador.response.body.$.token}}
+Content-Type: application/json
+
+{ "solicitudId": {{publicar.response.body.$.id}}, "otraParteId": {{loginCliente.response.body.$.usuarioId}} }
 
 ### Marca como leídos solo los avisos de la lista (una lista vacía no marca ninguno)
 

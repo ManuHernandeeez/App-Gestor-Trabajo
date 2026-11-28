@@ -61,7 +61,7 @@ public class AvisoRepositorio
         return await _bd.EnTransaccionAsync(usuarioId, async conexion =>
         {
             await using var comando = new NpgsqlCommand(
-                "SELECT fn_marcar_avisos_leidos(@usuario, @ids, @solicitud)", conexion);
+                "SELECT fn_marcar_avisos_leidos(@usuario, @ids, @solicitud, @otra)", conexion);
             comando.Parameters.AddWithValue("usuario", usuarioId);
             comando.Parameters.Add(new NpgsqlParameter("ids", NpgsqlDbType.Array | NpgsqlDbType.Integer)
             {
@@ -70,6 +70,10 @@ public class AvisoRepositorio
             comando.Parameters.Add(new NpgsqlParameter("solicitud", NpgsqlDbType.Integer)
             {
                 Value = datos.SolicitudId.HasValue ? datos.SolicitudId.Value : DBNull.Value
+            });
+            comando.Parameters.Add(new NpgsqlParameter("otra", NpgsqlDbType.Integer)
+            {
+                Value = datos.OtraParteId.HasValue ? datos.OtraParteId.Value : DBNull.Value
             });
             return (int)(await comando.ExecuteScalarAsync())!;
         });

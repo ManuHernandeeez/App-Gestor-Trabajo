@@ -6,8 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GestorTrabajoApi.Controllers;
 
-// Mensajes de texto entre el cliente y el trabajador asignado. Se piden al abrir la pantalla; no hay tiempo real.
-// Quién puede leer y escribir lo decide la base.
+// Chat de texto entre el cliente y un trabajador que envió propuesta a su solicitud (un hilo por trabajador).
+// Los mensajes viven en la base y la app los pide al abrir la pantalla y cada pocos segundos mientras está a la vista.
+// Quién puede leer y escribir lo decide la base. otraParteId es el trabajador con quien habla el cliente; el
+// trabajador no necesita indicarlo, y el cliente tampoco cuando el trabajo ya tiene trabajador asignado.
 [ApiController]
 [Route("api")]
 [Authorize(Roles = "cliente,trabajador")]
@@ -21,9 +23,9 @@ public class MensajesController : ControllerBase
     }
 
     [HttpGet("solicitudes/{id:int}/mensajes")]
-    public Task<List<MensajeRespuesta>> Listar(int id, [FromQuery] DateTimeOffset? desde)
+    public Task<List<MensajeRespuesta>> Listar(int id, [FromQuery] DateTimeOffset? desde, [FromQuery] int? otraParteId)
     {
-        return _mensajes.ListarAsync(User.ObtenerUsuarioId(), id, desde);
+        return _mensajes.ListarAsync(User.ObtenerUsuarioId(), id, desde, otraParteId);
     }
 
     [HttpPost("solicitudes/{id:int}/mensajes")]
