@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Tarjeta de una propuesta del trabajador: título y estado, oficio, zona y cliente, y abajo su precio y el presupuesto -->
+<!-- Tarjeta de una propuesta del trabajador: título y estado, oficio, zona y cliente, y abajo su precio y el presupuesto.
+     Una propuesta aceptada lleva el botón de chat; una pendiente, el de retirar. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -76,6 +77,16 @@
             android:textColor="@color/gris"
             android:textSize="@dimen/texto_normal" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btnChatear"
+        style="@style/Boton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/espacio_medio"
+        android:minHeight="44dp"
+        android:text="@string/boton_chatear_cliente"
+        android:textSize="@dimen/texto_normal" />
 
     <Button
         android:id="@+id/btnRetirar"

@@ -21,6 +21,7 @@ import java.util.ArrayList;
 public class PropuestasActivity extends AppCompatActivity {
 
     private int solicitudId;
+    private String tituloSolicitud;
     private String estadoSolicitud;
     private TextView txtEstado;
     private TextView txtIndicacion;
@@ -38,7 +39,8 @@ public class PropuestasActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         solicitudId = extras.getInt("solicitudId");
         estadoSolicitud = extras.getString("estado");
-        ((TextView) findViewById(R.id.txtTitulo)).setText(extras.getString("titulo"));
+        tituloSolicitud = extras.getString("titulo");
+        ((TextView) findViewById(R.id.txtTitulo)).setText(tituloSolicitud);
         ((TextView) findViewById(R.id.txtZona)).setText(extras.getString("zona"));
         ((TextView) findViewById(R.id.txtPresupuesto)).setText(
                 getString(R.string.tu_presupuesto, Formato.dinero(extras.getDouble("presupuesto"))));
@@ -56,6 +58,11 @@ public class PropuestasActivity extends AppCompatActivity {
             @Override
             public void rechazar(Propuesta propuesta) {
                 confirmarRechazar(propuesta);
+            }
+
+            @Override
+            public void chatear(Propuesta propuesta) {
+                abrirChat(propuesta);
             }
         });
         ListView listaPropuestas = findViewById(R.id.listaPropuestas);
@@ -79,7 +86,7 @@ public class PropuestasActivity extends AppCompatActivity {
     private void mostrarEstado() {
         EstadoSolicitud.pintar(txtEstado, estadoSolicitud);
         boolean publicada = estadoSolicitud.equals("publicada");
-        adaptador.permitirElegir(publicada);
+        adaptador.establecerEstadoSolicitud(estadoSolicitud);
         if (publicada) {
             txtIndicacion.setText(R.string.indicacion_elegir);
         } else if (estadoSolicitud.equals("cancelada") || estadoSolicitud.equals("vencida")) {
@@ -149,8 +156,14 @@ public class PropuestasActivity extends AppCompatActivity {
                 .show();
     }
 
+    // Chat con el trabajador de una propuesta, para ultimar detalles antes de aceptar o después de hacerlo.
+    // Al aceptar, se abre solo.
+    private void abrirChat(Propuesta propuesta) {
+        Chat.abrir(this, solicitudId, propuesta.trabajadorId, propuesta.trabajadorNombre, tituloSolicitud, true);
+    }
+
     // accion: "aceptar" o "rechazar". Después se recarga la lista, salga bien o no, porque pudo cambiar.
-    private void decidir(Propuesta propuesta, final String accion) {
+    private void decidir(final Propuesta propuesta, final String accion) {
         if (ocupado) {
             return;
         }
@@ -160,13 +173,16 @@ public class PropuestasActivity extends AppCompatActivity {
             public void alExito(String cuerpo) {
                 ocupado = false;
                 if (accion.equals("aceptar")) {
-                    Toast.makeText(PropuestasActivity.this, R.string.propuesta_aceptada_ok, Toast.LENGTH_LONG).show();
+                    Toast.makeText(PropuestasActivity.this,
+                            getString(R.string.propuesta_aceptada_ok, propuesta.trabajadorNombre), Toast.LENGTH_LONG).show();
                     estadoSolicitud = "asignada";
                     mostrarEstado();
+                    cargar();
+                    abrirChat(propuesta);
                 } else {
                     Toast.makeText(PropuestasActivity.this, R.string.propuesta_rechazada_ok, Toast.LENGTH_SHORT).show();
+                    cargar();
                 }
-                cargar();
             }
 
             @Override

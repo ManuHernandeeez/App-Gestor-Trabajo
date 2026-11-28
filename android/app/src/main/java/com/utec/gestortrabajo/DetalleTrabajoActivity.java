@@ -17,6 +17,9 @@ import org.json.JSONObject;
 public class DetalleTrabajoActivity extends AppCompatActivity {
 
     private int solicitudId;
+    // para abrir el chat con el cliente al enviar la propuesta
+    private String tituloTrabajo = "";
+    private String nombreCliente = "";
     private TextView txtCargando;
     private TextView txtTitulo;
     private TextView txtOficio;
@@ -107,6 +110,8 @@ public class DetalleTrabajoActivity extends AppCompatActivity {
             Toast.makeText(this, R.string.error_inesperado, Toast.LENGTH_LONG).show();
             return;
         }
+        tituloTrabajo = detalle.titulo;
+        nombreCliente = detalle.clienteNombre;
         txtTitulo.setText(detalle.titulo);
         txtOficio.setText(detalle.oficio);
         txtZona.setText(detalle.zona);
@@ -177,7 +182,10 @@ public class DetalleTrabajoActivity extends AppCompatActivity {
                 new ClienteApi.Respuesta() {
                     @Override
                     public void alExito(String respuesta) {
-                        Toast.makeText(DetalleTrabajoActivity.this, R.string.propuesta_enviada, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DetalleTrabajoActivity.this, R.string.propuesta_enviada, Toast.LENGTH_LONG).show();
+                        // luego de contestar la solicitud se abre el chat con el cliente para ultimar detalles;
+                        // al volver atrás queda la lista de trabajos
+                        Chat.abrir(DetalleTrabajoActivity.this, solicitudId, 0, nombreCliente, tituloTrabajo, true);
                         finish();
                     }
 

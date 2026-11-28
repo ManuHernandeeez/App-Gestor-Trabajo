@@ -95,12 +95,8 @@ public class SeguimientoActivity extends AppCompatActivity {
 
     // Botón Mensajes
     public void abrirMensajes(View vista) {
-        Intent intent = new Intent(this, ConversacionActivity.class);
-        intent.putExtra("solicitudId", solicitudId);
-        intent.putExtra("nombre", nombreOtraParte);
-        intent.putExtra("titulo", detalle.titulo);
-        intent.putExtra("estado", detalle.estado);
-        startActivity(intent);
+        // el botón solo sale con el trabajo asignado, en proceso o finalizado: el chat admite mensajes
+        Chat.abrir(this, solicitudId, 0, nombreOtraParte, detalle.titulo, true);
     }
 
     // Botón Marcar en proceso (trabajador)

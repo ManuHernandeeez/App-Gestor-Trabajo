@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Tarjeta de una propuesta para el cliente: quién la hace, su calificación, el precio destacado y la decisión -->
+<!-- Tarjeta de una propuesta para el cliente: quién la hace, su calificación, el precio destacado, el chat con el
+     trabajador para ultimar detalles y la decisión -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -110,6 +111,14 @@
             android:textSize="@dimen/texto_titulo"
             android:textStyle="bold" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btnChatear"
+        style="@style/BotonContorno"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/espacio_medio"
+        android:minHeight="48dp" />
 
     <LinearLayout
         android:id="@+id/vistaBotones"

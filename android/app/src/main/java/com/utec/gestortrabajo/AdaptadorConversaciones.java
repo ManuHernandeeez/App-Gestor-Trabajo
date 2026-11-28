@@ -34,7 +34,8 @@ public class AdaptadorConversaciones extends BaseAdapter {
 
     @Override
     public long getItemId(int posicion) {
-        return conversaciones.get(posicion).solicitudId;
+        Conversacion conversacion = conversaciones.get(posicion);
+        return conversacion.solicitudId * 100000L + conversacion.otraParteId;
     }
 
     @Override

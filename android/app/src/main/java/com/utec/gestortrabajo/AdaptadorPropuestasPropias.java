@@ -9,22 +9,25 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-// Propuestas del trabajador. El botón Retirar solo sale en las pendientes.
+// Propuestas del trabajador. El botón Retirar solo sale en las pendientes y el del chat, mientras el chat
+// con el cliente admite mensajes (propuesta pendiente de una solicitud publicada, o aceptada).
 public class AdaptadorPropuestasPropias extends BaseAdapter {
 
-    public interface AlRetirar {
+    public interface Acciones {
         void retirar(PropuestaPropia propuesta);
+
+        void chatear(PropuestaPropia propuesta);
     }
 
     private final Context contexto;
     private final ArrayList<PropuestaPropia> propuestas;
-    private final AlRetirar alRetirar;
+    private final Acciones acciones;
     private final LayoutInflater inflador;
 
-    public AdaptadorPropuestasPropias(Context contexto, ArrayList<PropuestaPropia> propuestas, AlRetirar alRetirar) {
+    public AdaptadorPropuestasPropias(Context contexto, ArrayList<PropuestaPropia> propuestas, Acciones acciones) {
         this.contexto = contexto;
         this.propuestas = propuestas;
-        this.alRetirar = alRetirar;
+        this.acciones = acciones;
         this.inflador = LayoutInflater.from(contexto);
     }
 
@@ -66,7 +69,16 @@ public class AdaptadorPropuestasPropias extends BaseAdapter {
         btnRetirar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View boton) {
-                alRetirar.retirar(propuesta);
+                acciones.retirar(propuesta);
+            }
+        });
+
+        View btnChatear = vista.findViewById(R.id.btnChatear);
+        btnChatear.setVisibility(Chat.abierto(propuesta.estado, propuesta.estadoSolicitud) ? View.VISIBLE : View.GONE);
+        btnChatear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View boton) {
+                acciones.chatear(propuesta);
             }
         });
         return vista;

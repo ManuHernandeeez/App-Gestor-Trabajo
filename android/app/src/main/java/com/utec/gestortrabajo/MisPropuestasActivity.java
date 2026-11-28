@@ -43,10 +43,15 @@ public class MisPropuestasActivity extends AppCompatActivity {
         txtNombre.setText(getString(R.string.hola_nombre, new Sesion(this).obtenerNombre()));
         txtVacio = findViewById(R.id.txtVacio);
 
-        adaptador = new AdaptadorPropuestasPropias(this, propuestas, new AdaptadorPropuestasPropias.AlRetirar() {
+        adaptador = new AdaptadorPropuestasPropias(this, propuestas, new AdaptadorPropuestasPropias.Acciones() {
             @Override
             public void retirar(PropuestaPropia propuesta) {
                 confirmarRetirar(propuesta);
+            }
+
+            @Override
+            public void chatear(PropuestaPropia propuesta) {
+                abrirChat(propuesta);
             }
         });
         ListView listaPropuestas = findViewById(R.id.listaPropuestas);
@@ -91,6 +96,12 @@ public class MisPropuestasActivity extends AppCompatActivity {
         Intent intent = new Intent(this, destino);
         intent.putExtra("solicitudId", propuesta.solicitudId);
         startActivity(intent);
+    }
+
+    // El chat con el cliente de esa solicitud, para ultimar detalles
+    private void abrirChat(PropuestaPropia propuesta) {
+        Chat.abrir(this, propuesta.solicitudId, 0, propuesta.clienteNombre, propuesta.titulo,
+                Chat.abierto(propuesta.estado, propuesta.estadoSolicitud));
     }
 
     private void cargar() {

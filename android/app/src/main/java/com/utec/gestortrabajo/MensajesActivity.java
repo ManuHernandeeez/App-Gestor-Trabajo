@@ -1,6 +1,5 @@
 package com.utec.gestortrabajo;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,7 +14,7 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 
-// Pantalla compartida: los trabajos con trabajador asignado, cada uno con su último mensaje.
+// Pantalla compartida: los chats del usuario, uno por cada persona y trabajo, con su último mensaje.
 // Tocar uno abre la conversación.
 public class MensajesActivity extends AppCompatActivity {
 
@@ -65,12 +64,8 @@ public class MensajesActivity extends AppCompatActivity {
     }
 
     private void abrirConversacion(Conversacion conversacion) {
-        Intent intent = new Intent(this, ConversacionActivity.class);
-        intent.putExtra("solicitudId", conversacion.solicitudId);
-        intent.putExtra("nombre", conversacion.otraParteNombre);
-        intent.putExtra("titulo", conversacion.titulo);
-        intent.putExtra("estado", conversacion.estado);
-        startActivity(intent);
+        Chat.abrir(this, conversacion.solicitudId, conversacion.otraParteId, conversacion.otraParteNombre,
+                conversacion.titulo, conversacion.puedeEscribir);
     }
 
     private void cargar() {

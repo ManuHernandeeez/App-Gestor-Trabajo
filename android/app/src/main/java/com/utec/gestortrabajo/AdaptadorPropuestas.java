@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -12,20 +13,22 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 // Propuestas de una solicitud para el cliente. Los botones Aceptar y Rechazar solo salen en las pendientes
-// y mientras la solicitud siga publicada.
+// y mientras la solicitud siga publicada. El botón de chat sale mientras el chat con ese trabajador admite mensajes.
 public class AdaptadorPropuestas extends BaseAdapter {
 
     public interface AlElegir {
         void aceptar(Propuesta propuesta);
 
         void rechazar(Propuesta propuesta);
+
+        void chatear(Propuesta propuesta);
     }
 
     private final Context contexto;
     private final ArrayList<Propuesta> propuestas;
     private final AlElegir alElegir;
     private final LayoutInflater inflador;
-    private boolean sePuedeElegir = false;
+    private String estadoSolicitud = "";
 
     public AdaptadorPropuestas(Context contexto, ArrayList<Propuesta> propuestas, AlElegir alElegir) {
         this.contexto = contexto;
@@ -34,8 +37,8 @@ public class AdaptadorPropuestas extends BaseAdapter {
         this.inflador = LayoutInflater.from(contexto);
     }
 
-    public void permitirElegir(boolean permitir) {
-        sePuedeElegir = permitir;
+    public void establecerEstadoSolicitud(String estado) {
+        estadoSolicitud = estado;
         notifyDataSetChanged();
     }
 
@@ -73,7 +76,17 @@ public class AdaptadorPropuestas extends BaseAdapter {
         txtMensaje.setText(propuesta.mensaje);
         txtMensaje.setVisibility(propuesta.mensaje.isEmpty() ? View.GONE : View.VISIBLE);
 
-        boolean conBotones = sePuedeElegir && propuesta.estado.equals("pendiente");
+        Button btnChatear = vista.findViewById(R.id.btnChatear);
+        btnChatear.setVisibility(Chat.abierto(propuesta.estado, estadoSolicitud) ? View.VISIBLE : View.GONE);
+        btnChatear.setText(contexto.getString(R.string.boton_chatear_trabajador, propuesta.trabajadorNombre));
+        btnChatear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View boton) {
+                alElegir.chatear(propuesta);
+            }
+        });
+
+        boolean conBotones = estadoSolicitud.equals("publicada") && propuesta.estado.equals("pendiente");
         vista.findViewById(R.id.vistaBotones).setVisibility(conBotones ? View.VISIBLE : View.GONE);
         vista.findViewById(R.id.btnAceptar).setOnClickListener(new View.OnClickListener() {
             @Override
