@@ -164,6 +164,10 @@ CREATE TABLE IF NOT EXISTS avisos (
     leido         boolean     NOT NULL DEFAULT false
 );
 
+-- Quién originó el aviso de mensaje nuevo, para contar los no leídos de cada hilo del chat.
+-- Va aparte del CREATE TABLE para que las bases que ya tenían la tabla también la reciban.
+ALTER TABLE avisos ADD COLUMN IF NOT EXISTS otra_parte_id integer REFERENCES usuarios (id);
+
 CREATE TABLE IF NOT EXISTS bitacora (
     id               integer     GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     solicitud_id     integer     NOT NULL REFERENCES solicitudes (id),
@@ -201,6 +205,7 @@ CREATE INDEX IF NOT EXISTS ix_mensajes_receptor_fecha ON mensajes (receptor_id, 
 
 CREATE INDEX IF NOT EXISTS ix_avisos_usuario_fecha ON avisos (usuario_id, fecha);
 CREATE INDEX IF NOT EXISTS ix_avisos_solicitud ON avisos (solicitud_id);
+CREATE INDEX IF NOT EXISTS ix_avisos_otra_parte ON avisos (otra_parte_id);
 
 CREATE INDEX IF NOT EXISTS ix_bitacora_solicitud ON bitacora (solicitud_id);
 CREATE INDEX IF NOT EXISTS ix_bitacora_usuario ON bitacora (usuario_id);

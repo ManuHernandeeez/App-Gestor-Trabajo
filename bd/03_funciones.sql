@@ -724,28 +724,79 @@ BEGIN
 END $$;
 
 -- Tanda 6: mensajes y avisos
+--
+-- El chat es un hilo por cada pareja (solicitud, trabajador): el cliente dueño y un trabajador que le envió
+-- propuesta. Se abre en cuanto hay una propuesta pendiente, para ultimar detalles; al aceptar una, solo el
+-- trabajador asignado puede seguir escribiendo. Los hilos de las demás propuestas y los de una solicitud
+-- cancelada o vencida quedan de solo lectura.
 
--- Mensaje entre el cliente y el trabajador asignado. El receptor es la otra parte.
-CREATE OR REPLACE FUNCTION fn_enviar_mensaje(p_emisor_id int, p_solicitud_id int, p_texto text)
-RETURNS int LANGUAGE plpgsql AS $$
+-- Un hilo admite mensajes nuevos mientras la propuesta del trabajador esté pendiente y la solicitud publicada,
+-- o mientras el trabajo esté asignado a ese trabajador (asignada, en proceso o finalizada).
+CREATE OR REPLACE FUNCTION fn_hilo_abierto(p_solicitud_id int, p_trabajador_id int)
+RETURNS boolean LANGUAGE sql STABLE AS $$
+    SELECT EXISTS (
+        SELECT 1
+          FROM solicitudes s
+         WHERE s.id = p_solicitud_id AND NOT s.eliminado
+           AND ((s.estado = 'publicada'
+                 AND EXISTS (SELECT 1 FROM ofertas o
+                              WHERE o.solicitud_id = s.id AND o.trabajador_id = p_trabajador_id AND o.estado = 'pendiente'))
+                OR (s.estado IN ('asignada', 'en_proceso', 'finalizada') AND s.trabajador_id = p_trabajador_id)));
+$$;
+
+-- Las dos partes de un hilo y si admite mensajes nuevos. p_usuario_id es el cliente dueño o un trabajador que
+-- envió propuesta (aunque ya no esté activa). El cliente dice con quién habla en p_otro_id; si no lo dice y la
+-- solicitud tiene trabajador asignado, es ese. asignado indica si el trabajador del hilo es el asignado.
+CREATE OR REPLACE FUNCTION fn_hilo_chat(p_usuario_id int, p_solicitud_id int, p_otro_id int)
+RETURNS TABLE (parte_cliente_id int, parte_trabajador_id int, abierto boolean, asignado boolean)
+LANGUAGE plpgsql STABLE AS $$
 DECLARE
     v_cliente_id     int;
+    v_asignado_id    int;
     v_trabajador_id  int;
-    v_estado         text;
-    v_texto          text := btrim(p_texto);
-    v_id             int;
 BEGIN
-    SELECT cliente_id, trabajador_id, estado INTO v_cliente_id, v_trabajador_id, v_estado
-      FROM solicitudes WHERE id = p_solicitud_id AND NOT eliminado;
+    SELECT s.cliente_id, s.trabajador_id INTO v_cliente_id, v_asignado_id
+      FROM solicitudes s WHERE s.id = p_solicitud_id AND NOT s.eliminado;
     IF NOT FOUND THEN
         RAISE EXCEPTION 'La solicitud no existe' USING ERRCODE = 'GT002';
     END IF;
-    IF NOT COALESCE(p_emisor_id = v_cliente_id OR p_emisor_id = v_trabajador_id, false)
-       OR NOT fn_usuario_activo(p_emisor_id) THEN
-        RAISE EXCEPTION 'Solo el cliente y el trabajador asignado se escriben en este trabajo' USING ERRCODE = 'GT003';
+    IF NOT fn_usuario_activo(p_usuario_id) THEN
+        RAISE EXCEPTION 'Solo el cliente y un trabajador con propuesta se escriben en este trabajo' USING ERRCODE = 'GT003';
     END IF;
-    IF v_estado NOT IN ('asignada', 'en_proceso', 'finalizada') THEN
-        RAISE EXCEPTION 'Solo se pueden enviar mensajes en un trabajo asignado' USING ERRCODE = 'GT001';
+
+    IF p_usuario_id = v_cliente_id THEN
+        v_trabajador_id := COALESCE(p_otro_id, v_asignado_id);
+        IF v_trabajador_id IS NULL THEN
+            RAISE EXCEPTION 'Elige con qué trabajador quieres hablar' USING ERRCODE = 'GT001';
+        END IF;
+    ELSE
+        IF p_otro_id IS NOT NULL AND p_otro_id <> v_cliente_id THEN
+            RAISE EXCEPTION 'Solo el cliente y un trabajador con propuesta se escriben en este trabajo' USING ERRCODE = 'GT003';
+        END IF;
+        v_trabajador_id := p_usuario_id;
+    END IF;
+
+    IF NOT EXISTS (SELECT 1 FROM ofertas o WHERE o.solicitud_id = p_solicitud_id AND o.trabajador_id = v_trabajador_id) THEN
+        RAISE EXCEPTION 'Solo el cliente y un trabajador con propuesta se escriben en este trabajo' USING ERRCODE = 'GT003';
+    END IF;
+
+    RETURN QUERY SELECT v_cliente_id, v_trabajador_id, fn_hilo_abierto(p_solicitud_id, v_trabajador_id),
+                        v_asignado_id IS NOT DISTINCT FROM v_trabajador_id;
+END $$;
+
+-- Mensaje dentro de un hilo. El receptor es la otra parte. El cliente indica el trabajador en p_otro_id
+-- (opcional si el trabajo ya está asignado); el trabajador no necesita indicar nada.
+DROP FUNCTION IF EXISTS fn_enviar_mensaje(int, int, text);
+CREATE OR REPLACE FUNCTION fn_enviar_mensaje(p_emisor_id int, p_solicitud_id int, p_texto text, p_otro_id int DEFAULT NULL)
+RETURNS int LANGUAGE plpgsql AS $$
+DECLARE
+    v_hilo   record;
+    v_texto  text := btrim(p_texto);
+    v_id     int;
+BEGIN
+    SELECT * INTO v_hilo FROM fn_hilo_chat(p_emisor_id, p_solicitud_id, p_otro_id);
+    IF NOT v_hilo.abierto THEN
+        RAISE EXCEPTION 'Este chat ya no admite mensajes nuevos' USING ERRCODE = 'GT001';
     END IF;
     IF v_texto IS NULL OR char_length(v_texto) NOT BETWEEN 1 AND 1000 THEN
         RAISE EXCEPTION 'El mensaje es obligatorio y no puede pasar de 1000 caracteres' USING ERRCODE = 'GT001';
@@ -753,14 +804,17 @@ BEGIN
 
     INSERT INTO mensajes (solicitud_id, emisor_id, receptor_id, texto)
     VALUES (p_solicitud_id, p_emisor_id,
-            CASE WHEN p_emisor_id = v_cliente_id THEN v_trabajador_id ELSE v_cliente_id END,
+            CASE WHEN p_emisor_id = v_hilo.parte_cliente_id THEN v_hilo.parte_trabajador_id ELSE v_hilo.parte_cliente_id END,
             v_texto)
     RETURNING id INTO v_id;
     RETURN v_id;
 END $$;
 
--- Mensajes de un trabajo para una de sus dos partes, posteriores a p_desde (todos si es NULL).
-CREATE OR REPLACE FUNCTION fn_mensajes_de_solicitud(p_usuario_id int, p_solicitud_id int, p_desde timestamptz DEFAULT NULL)
+-- Mensajes de un hilo para una de sus dos partes, posteriores a p_desde (todos si es NULL). Un trabajador que
+-- todavía no tiene el trabajo asignado ve al cliente con el nombre abreviado, igual que en el resto de la app.
+DROP FUNCTION IF EXISTS fn_mensajes_de_solicitud(int, int, timestamptz);
+CREATE OR REPLACE FUNCTION fn_mensajes_de_solicitud(p_usuario_id int, p_solicitud_id int, p_desde timestamptz DEFAULT NULL,
+                                                    p_otro_id int DEFAULT NULL)
 RETURNS TABLE (
     id             int,
     emisor_id      int,
@@ -770,38 +824,39 @@ RETURNS TABLE (
     es_mio         boolean)
 LANGUAGE plpgsql STABLE AS $$
 DECLARE
-    v_cliente_id     int;
-    v_trabajador_id  int;
+    v_hilo  record;
 BEGIN
-    SELECT s.cliente_id, s.trabajador_id INTO v_cliente_id, v_trabajador_id
-      FROM solicitudes s WHERE s.id = p_solicitud_id AND NOT s.eliminado;
-    IF NOT FOUND THEN
-        RAISE EXCEPTION 'La solicitud no existe' USING ERRCODE = 'GT002';
-    END IF;
-    IF NOT COALESCE(p_usuario_id = v_cliente_id OR p_usuario_id = v_trabajador_id, false)
-       OR NOT fn_usuario_activo(p_usuario_id) THEN
-        RAISE EXCEPTION 'Solo el cliente y el trabajador asignado ven los mensajes de este trabajo' USING ERRCODE = 'GT003';
-    END IF;
+    SELECT * INTO v_hilo FROM fn_hilo_chat(p_usuario_id, p_solicitud_id, p_otro_id);
 
     RETURN QUERY
-    SELECT m.id, m.emisor_id, u.nombre, m.texto, m.fecha, m.emisor_id = p_usuario_id
+    SELECT m.id, m.emisor_id,
+           CASE WHEN m.emisor_id = v_hilo.parte_cliente_id AND p_usuario_id <> v_hilo.parte_cliente_id AND NOT v_hilo.asignado
+                THEN fn_nombre_corto(u.nombre) ELSE u.nombre END,
+           m.texto, m.fecha, m.emisor_id = p_usuario_id
       FROM mensajes m
       JOIN usuarios u ON u.id = m.emisor_id
-     WHERE m.solicitud_id = p_solicitud_id AND (p_desde IS NULL OR m.fecha > p_desde)
+     WHERE m.solicitud_id = p_solicitud_id
+       AND m.emisor_id IN (v_hilo.parte_cliente_id, v_hilo.parte_trabajador_id)
+       AND m.receptor_id IN (v_hilo.parte_cliente_id, v_hilo.parte_trabajador_id)
+       AND (p_desde IS NULL OR m.fecha > p_desde)
      ORDER BY m.fecha, m.id;
 END $$;
 
--- Trabajos con trabajador asignado donde participa el usuario, con el último mensaje y cuántos avisos de
--- mensaje nuevo tiene sin leer en cada uno.
+-- Hilos de chat del usuario, uno por cada pareja (solicitud, trabajador), con el último mensaje y cuántos avisos
+-- de mensaje nuevo tiene sin leer en ese hilo. Salen los que tienen mensajes, los del trabajador asignado y los
+-- que están abiertos para escribir. abierto dice si todavía admite mensajes nuevos.
+DROP FUNCTION IF EXISTS fn_conversaciones(int);
 CREATE OR REPLACE FUNCTION fn_conversaciones(p_usuario_id int)
 RETURNS TABLE (
     solicitud_id       int,
     titulo             text,
     estado             text,
+    otra_parte_id      int,
     otra_parte_nombre  text,
     ultimo_mensaje     text,
     fecha_ultimo       timestamptz,
-    mensajes_nuevos    int)
+    mensajes_nuevos    int,
+    abierto            boolean)
 LANGUAGE plpgsql STABLE AS $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM usuarios u WHERE u.id = p_usuario_id AND u.rol IN ('cliente', 'trabajador')
@@ -810,20 +865,28 @@ BEGIN
     END IF;
 
     RETURN QUERY
-    SELECT s.id, s.titulo, s.estado, u.nombre, ult.texto, ult.fecha,
+    SELECT s.id, s.titulo, s.estado, otra.id,
+           CASE WHEN otra.id = s.cliente_id AND s.trabajador_id IS DISTINCT FROM p_usuario_id
+                THEN fn_nombre_corto(otra.nombre) ELSE otra.nombre END,
+           ult.texto, ult.fecha,
            (SELECT count(*)::int FROM avisos a
-             WHERE a.usuario_id = p_usuario_id AND a.solicitud_id = s.id AND a.tipo = 'mensaje_nuevo' AND NOT a.leido)
-      FROM solicitudes s
-      JOIN usuarios u ON u.id = CASE WHEN s.cliente_id = p_usuario_id THEN s.trabajador_id ELSE s.cliente_id END
+             WHERE a.usuario_id = p_usuario_id AND a.solicitud_id = s.id AND a.tipo = 'mensaje_nuevo' AND NOT a.leido
+               AND (a.otra_parte_id = otra.id OR a.otra_parte_id IS NULL)),
+           fn_hilo_abierto(s.id, h.trabajador_id)
+      FROM (SELECT DISTINCT o.solicitud_id, o.trabajador_id FROM ofertas o) h
+      JOIN solicitudes s ON s.id = h.solicitud_id
+      JOIN usuarios otra ON otra.id = CASE WHEN s.cliente_id = p_usuario_id THEN h.trabajador_id ELSE s.cliente_id END
       LEFT JOIN LATERAL (
             SELECT m.texto, m.fecha
               FROM mensajes m
              WHERE m.solicitud_id = s.id
+               AND m.emisor_id IN (s.cliente_id, h.trabajador_id) AND m.receptor_id IN (s.cliente_id, h.trabajador_id)
              ORDER BY m.fecha DESC, m.id DESC
              LIMIT 1) AS ult ON true
-     WHERE NOT s.eliminado AND s.trabajador_id IS NOT NULL
-       AND (s.cliente_id = p_usuario_id OR s.trabajador_id = p_usuario_id)
-     ORDER BY COALESCE(ult.fecha, s.fecha_asignacion) DESC, s.id DESC;
+     WHERE NOT s.eliminado
+       AND (s.cliente_id = p_usuario_id OR h.trabajador_id = p_usuario_id)
+       AND (ult.fecha IS NOT NULL OR s.trabajador_id = h.trabajador_id OR fn_hilo_abierto(s.id, h.trabajador_id))
+     ORDER BY COALESCE(ult.fecha, s.fecha_asignacion, s.fecha_publicacion) DESC, s.id DESC, h.trabajador_id;
 END $$;
 
 -- Lo nuevo para el usuario al abrir la app: mensajes recibidos y avisos posteriores a p_desde. Sin p_desde
@@ -864,8 +927,11 @@ BEGIN
 END $$;
 
 -- Marca avisos del usuario como leídos: los de una solicitud, los de la lista p_ids o, sin ninguno de los
--- dos, todos. Devuelve cuántos estaban sin leer.
-CREATE OR REPLACE FUNCTION fn_marcar_avisos_leidos(p_usuario_id int, p_ids int[] DEFAULT NULL, p_solicitud_id int DEFAULT NULL)
+-- dos, todos. Con p_otra_parte_id junto a la solicitud solo marca los avisos de mensaje de ese hilo del chat.
+-- Devuelve cuántos estaban sin leer.
+DROP FUNCTION IF EXISTS fn_marcar_avisos_leidos(int, int[], int);
+CREATE OR REPLACE FUNCTION fn_marcar_avisos_leidos(p_usuario_id int, p_ids int[] DEFAULT NULL, p_solicitud_id int DEFAULT NULL,
+                                                   p_otra_parte_id int DEFAULT NULL)
 RETURNS int LANGUAGE plpgsql AS $$
 DECLARE
     v_total int;
@@ -874,7 +940,12 @@ BEGIN
         RAISE EXCEPTION 'Tu cuenta no está activa' USING ERRCODE = 'GT003';
     END IF;
 
-    IF p_solicitud_id IS NOT NULL THEN
+    IF p_solicitud_id IS NOT NULL AND p_otra_parte_id IS NOT NULL THEN
+        -- los avisos de mensaje anteriores a la columna otra_parte_id no la traen y se marcan con cualquier hilo
+        UPDATE avisos SET leido = true
+         WHERE usuario_id = p_usuario_id AND solicitud_id = p_solicitud_id AND NOT leido
+           AND (otra_parte_id = p_otra_parte_id OR (otra_parte_id IS NULL AND tipo = 'mensaje_nuevo'));
+    ELSIF p_solicitud_id IS NOT NULL THEN
         UPDATE avisos SET leido = true WHERE usuario_id = p_usuario_id AND solicitud_id = p_solicitud_id AND NOT leido;
     ELSIF cardinality(p_ids) > 0 THEN
         UPDATE avisos SET leido = true WHERE usuario_id = p_usuario_id AND id = ANY (p_ids) AND NOT leido;

@@ -127,8 +127,9 @@ BEGIN
     SELECT titulo INTO v_titulo FROM solicitudes WHERE id = NEW.solicitud_id;
     SELECT fn_nombre_corto(nombre) INTO v_emisor FROM usuarios WHERE id = NEW.emisor_id;
 
-    INSERT INTO avisos (usuario_id, tipo, texto, solicitud_id)
-    VALUES (NEW.receptor_id, 'mensaje_nuevo', 'Mensaje nuevo de ' || v_emisor || ' sobre «' || v_titulo || '»', NEW.solicitud_id);
+    INSERT INTO avisos (usuario_id, tipo, texto, solicitud_id, otra_parte_id)
+    VALUES (NEW.receptor_id, 'mensaje_nuevo', 'Mensaje nuevo de ' || v_emisor || ' sobre «' || v_titulo || '»',
+            NEW.solicitud_id, NEW.emisor_id);
     RETURN NULL;
 END $$;
 

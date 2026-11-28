@@ -1010,6 +1010,126 @@ BEGIN
         EXISTS (SELECT 1 FROM usuarios WHERE id = v_tr1 AND promedio_calificacion = 4.00 AND total_calificaciones = 2));
 END $$;
 
+-- Chat antes de aceptar: un hilo por cada trabajador que envió propuesta
+DO $$
+DECLARE
+    v_cl1  int := pg_temp.ctx('cl1');
+    v_tr1  int := pg_temp.ctx('tr1');
+    v_tr2  int := pg_temp.ctx('tr2');
+    v_s int; v_s2 int; v_o1 int; v_o2 int; v_m1 int; v_m2 int; v_m3 int; v_n int;
+    v_r    record;
+BEGIN
+    v_s := fn_publicar_solicitud(v_cl1, pg_temp.ctx('oficio'), pg_temp.ctx('zacamil'), 'Cambiar llave del baño', 'Texto de prueba', 20.00, 'Dirección inventada, casa 31');
+    INSERT INTO contexto VALUES ('chat1', v_s);
+
+    -- Sin propuestas no hay hilo
+    PERFORM pg_temp.espera('Sin propuesta, el trabajador no puede escribir: GT003', $q$
+        SELECT fn_enviar_mensaje(pg_temp.ctx('tr1'), pg_temp.ctx('chat1'), 'Hola')
+    $q$, 'GT003');
+    PERFORM pg_temp.espera('Sin trabajador asignado, el cliente tiene que decir con quién habla: GT001', $q$
+        SELECT fn_enviar_mensaje(pg_temp.ctx('cl1'), pg_temp.ctx('chat1'), 'Hola')
+    $q$, 'GT001');
+    PERFORM pg_temp.espera('El cliente no escribe a un trabajador que no envió propuesta: GT003', $q$
+        SELECT fn_enviar_mensaje(pg_temp.ctx('cl1'), pg_temp.ctx('chat1'), 'Hola', pg_temp.ctx('tr3'))
+    $q$, 'GT003');
+    PERFORM pg_temp.verificar('Sin propuestas no hay hilos abiertos en la lista del cliente',
+        NOT EXISTS (SELECT 1 FROM fn_conversaciones(v_cl1) c WHERE c.solicitud_id = v_s));
+
+    v_o1 := fn_enviar_oferta(v_tr1, v_s, 20.00, NULL);
+    v_o2 := fn_enviar_oferta(v_tr2, v_s, 18.00, NULL);
+
+    -- Con la solicitud publicada y la propuesta pendiente, los dos se escriben
+    v_m1 := fn_enviar_mensaje(v_tr1, v_s, 'Hola, ¿tiene la llave a mano? (texto de prueba)');
+    PERFORM pg_temp.verificar('Con propuesta pendiente, el trabajador escribe al cliente antes de que acepte',
+        EXISTS (SELECT 1 FROM mensajes WHERE id = v_m1 AND emisor_id = v_tr1 AND receptor_id = v_cl1 AND solicitud_id = v_s));
+    v_m2 := fn_enviar_mensaje(v_cl1, v_s, 'Sí, está en la cocina (texto de prueba)', v_tr1);
+    PERFORM pg_temp.verificar('El cliente responde indicando con qué trabajador habla',
+        EXISTS (SELECT 1 FROM mensajes WHERE id = v_m2 AND emisor_id = v_cl1 AND receptor_id = v_tr1));
+    v_m3 := fn_enviar_mensaje(v_cl1, v_s, 'Hola, ¿cuándo puede venir? (texto de prueba)', v_tr2);
+    PERFORM pg_temp.espera('Con varios trabajadores, el cliente sin indicar con cuál habla: GT001', $q$
+        SELECT fn_enviar_mensaje(pg_temp.ctx('cl1'), pg_temp.ctx('chat1'), 'Hola')
+    $q$, 'GT001');
+
+    -- Cada hilo es aparte
+    PERFORM pg_temp.verificar('El hilo del primer trabajador tiene sus dos mensajes y el del segundo solo el suyo',
+        (SELECT array_agg(m.id ORDER BY m.id) FROM fn_mensajes_de_solicitud(v_cl1, v_s, NULL, v_tr1) m) = ARRAY[v_m1, v_m2]
+        AND (SELECT array_agg(m.id) FROM fn_mensajes_de_solicitud(v_cl1, v_s, NULL, v_tr2) m) = ARRAY[v_m3]);
+    PERFORM pg_temp.verificar('Cada trabajador solo ve su propio hilo con el cliente',
+        (SELECT array_agg(m.id ORDER BY m.id) FROM fn_mensajes_de_solicitud(v_tr1, v_s) m) = ARRAY[v_m1, v_m2]
+        AND (SELECT array_agg(m.id) FROM fn_mensajes_de_solicitud(v_tr2, v_s) m) = ARRAY[v_m3]);
+    PERFORM pg_temp.espera('Un trabajador no puede pedir el hilo de otro trabajador: GT003', $q$
+        SELECT * FROM fn_mensajes_de_solicitud(pg_temp.ctx('tr2'), pg_temp.ctx('chat1'), NULL, pg_temp.ctx('tr1'))
+    $q$, 'GT003');
+    PERFORM pg_temp.espera('Un trabajador sin propuesta no lee ningún hilo: GT003', $q$
+        SELECT * FROM fn_mensajes_de_solicitud(pg_temp.ctx('tr3'), pg_temp.ctx('chat1'))
+    $q$, 'GT003');
+    PERFORM pg_temp.espera('Otro cliente no lee los hilos: GT003', $q$
+        SELECT * FROM fn_mensajes_de_solicitud(pg_temp.ctx('cl2'), pg_temp.ctx('chat1'), NULL, pg_temp.ctx('tr1'))
+    $q$, 'GT003');
+    PERFORM pg_temp.verificar('Antes de la asignación, el trabajador ve al cliente con el nombre abreviado',
+        (SELECT string_agg(m.emisor_nombre, ',' ORDER BY m.id) FROM fn_mensajes_de_solicitud(v_tr1, v_s) m) = 'Luis Flujo,Carlos E.');
+    PERFORM pg_temp.verificar('El cliente ve los nombres completos',
+        (SELECT string_agg(m.emisor_nombre, ',' ORDER BY m.id) FROM fn_mensajes_de_solicitud(v_cl1, v_s, NULL, v_tr1) m) = 'Luis Flujo,Carlos Ejemplo');
+
+    -- Lista de hilos: uno por trabajador, con los no leídos de cada uno
+    PERFORM pg_temp.verificar('El cliente tiene un hilo por cada trabajador con propuesta pendiente',
+        (SELECT count(*) FROM fn_conversaciones(v_cl1) c WHERE c.solicitud_id = v_s AND c.abierto) = 2);
+    SELECT * INTO v_r FROM fn_conversaciones(v_cl1) c WHERE c.solicitud_id = v_s AND c.otra_parte_id = v_tr1;
+    PERFORM pg_temp.verificar('El hilo del primer trabajador trae su nombre, su último mensaje y 1 sin leer',
+        v_r.otra_parte_nombre = 'Luis Flujo' AND v_r.ultimo_mensaje = 'Sí, está en la cocina (texto de prueba)'
+        AND v_r.mensajes_nuevos = 1 AND v_r.estado = 'publicada');
+    SELECT * INTO v_r FROM fn_conversaciones(v_cl1) c WHERE c.solicitud_id = v_s AND c.otra_parte_id = v_tr2;
+    PERFORM pg_temp.verificar('El hilo del segundo trabajador no tiene mensajes sin leer del cliente',
+        v_r.ultimo_mensaje = 'Hola, ¿cuándo puede venir? (texto de prueba)' AND v_r.mensajes_nuevos = 0);
+    SELECT * INTO v_r FROM fn_conversaciones(v_tr1) c WHERE c.solicitud_id = v_s;
+    PERFORM pg_temp.verificar('Para el trabajador el hilo es con el cliente, con nombre abreviado, y trae 1 sin leer',
+        v_r.otra_parte_nombre = 'Carlos E.' AND v_r.mensajes_nuevos = 1 AND v_r.abierto);
+
+    -- Marcar leídos por hilo
+    v_n := fn_marcar_avisos_leidos(v_cl1, NULL, v_s, v_tr2);
+    PERFORM pg_temp.verificar('Marcar el hilo de un trabajador no toca los avisos de otro',
+        v_n = 0 AND (SELECT c.mensajes_nuevos FROM fn_conversaciones(v_cl1) c WHERE c.solicitud_id = v_s AND c.otra_parte_id = v_tr1) = 1);
+    v_n := fn_marcar_avisos_leidos(v_cl1, NULL, v_s, v_tr1);
+    PERFORM pg_temp.verificar('Marcar el hilo deja en 0 sus mensajes sin leer y deja las propuestas nuevas sin leer',
+        v_n = 1
+        AND (SELECT c.mensajes_nuevos FROM fn_conversaciones(v_cl1) c WHERE c.solicitud_id = v_s AND c.otra_parte_id = v_tr1) = 0
+        AND EXISTS (SELECT 1 FROM avisos WHERE usuario_id = v_cl1 AND solicitud_id = v_s AND tipo = 'propuesta_nueva' AND NOT leido));
+
+    -- Al aceptar, solo el trabajador elegido sigue escribiendo; los demás hilos quedan de solo lectura
+    PERFORM fn_aceptar_oferta(v_cl1, v_o1);
+    PERFORM pg_temp.espera('Un trabajador con propuesta rechazada ya no escribe: GT001', $q$
+        SELECT fn_enviar_mensaje(pg_temp.ctx('tr2'), pg_temp.ctx('chat1'), 'Hola')
+    $q$, 'GT001');
+    PERFORM pg_temp.espera('El cliente tampoco escribe al trabajador rechazado: GT001', $q$
+        SELECT fn_enviar_mensaje(pg_temp.ctx('cl1'), pg_temp.ctx('chat1'), 'Hola', pg_temp.ctx('tr2'))
+    $q$, 'GT001');
+    PERFORM pg_temp.verificar('El trabajador rechazado conserva su hilo para leerlo',
+        (SELECT count(*) FROM fn_mensajes_de_solicitud(v_tr2, v_s) m) = 1
+        AND EXISTS (SELECT 1 FROM fn_conversaciones(v_tr2) c WHERE c.solicitud_id = v_s AND NOT c.abierto));
+    PERFORM pg_temp.verificar('Con el trabajo asignado, el cliente ya no necesita decir con quién habla',
+        fn_enviar_mensaje(v_cl1, v_s, 'Quedamos entonces (texto de prueba)') IS NOT NULL);
+    PERFORM pg_temp.verificar('Asignado, el trabajador ve al cliente con el nombre completo',
+        (SELECT m.emisor_nombre FROM fn_mensajes_de_solicitud(v_tr1, v_s) m ORDER BY m.id DESC LIMIT 1) = 'Carlos Ejemplo');
+
+    -- Retirar la propuesta o cancelar la solicitud cierra el hilo; reenviar lo vuelve a abrir
+    v_s2 := fn_publicar_solicitud(v_cl1, pg_temp.ctx('oficio'), pg_temp.ctx('zacamil'), 'Cambiar foco del patio', 'Texto de prueba', 8.00, 'Dirección inventada, casa 32');
+    v_o1 := fn_enviar_oferta(v_tr1, v_s2, 8.00, NULL);
+    PERFORM fn_enviar_mensaje(v_tr1, v_s2, 'Buenas (texto de prueba)');
+    PERFORM fn_retirar_oferta(v_tr1, v_o1);
+    PERFORM pg_temp.verificar('Al retirar la propuesta el hilo queda de solo lectura',
+        NOT (SELECT c.abierto FROM fn_conversaciones(v_tr1) c WHERE c.solicitud_id = v_s2)
+        AND (SELECT count(*) FROM fn_mensajes_de_solicitud(v_tr1, v_s2) m) = 1);
+    PERFORM fn_enviar_oferta(v_tr1, v_s2, 9.00, NULL);
+    PERFORM pg_temp.verificar('Al reenviar la propuesta el hilo vuelve a abrirse',
+        fn_enviar_mensaje(v_tr1, v_s2, 'Ya la reenvié (texto de prueba)') IS NOT NULL);
+    PERFORM fn_cancelar_solicitud(v_cl1, v_s2);
+    PERFORM pg_temp.espera('Al cancelar la solicitud el hilo deja de admitir mensajes: GT001', format($q$
+        SELECT fn_enviar_mensaje(%s, %s, 'Hola')
+    $q$, v_tr1, v_s2), 'GT001');
+    PERFORM pg_temp.verificar('El hilo de una solicitud cancelada sigue en la lista, de solo lectura',
+        EXISTS (SELECT 1 FROM fn_conversaciones(v_cl1) c WHERE c.solicitud_id = v_s2 AND NOT c.abierto AND c.ultimo_mensaje IS NOT NULL));
+END $$;
+
 -- Perfil y foto
 DO $$
 DECLARE
@@ -1322,8 +1442,10 @@ BEGIN
         PERFORM * FROM fn_contacto_trabajo(v_cl, v_s);
         PERFORM fn_marcar_en_proceso(v_tr, v_s);
         PERFORM fn_enviar_mensaje(v_tr, v_s, 'Mensaje de prueba');
-        PERFORM * FROM fn_mensajes_de_solicitud(v_cl, v_s, NULL);
+        PERFORM fn_enviar_mensaje(v_cl, v_s, 'Respuesta de prueba', v_tr);
+        PERFORM * FROM fn_mensajes_de_solicitud(v_cl, v_s, NULL, v_tr);
         PERFORM * FROM fn_conversaciones(v_cl);
+        PERFORM fn_marcar_avisos_leidos(v_cl, NULL, v_s, v_tr);
         PERFORM fn_finalizar_solicitud(v_cl, v_s);
         PERFORM fn_calificar(v_cl, v_s, 5, 'Comentario de prueba');
         PERFORM fn_calificar(v_tr, v_s, 5, 'Comentario de prueba');
